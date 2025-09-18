@@ -4,13 +4,16 @@ import { Header } from './components/layout/Header';
 import { Footer } from './components/layout/Footer/Footer';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { DebugProvider, useDebug } from './contexts/DebugContext';
+import { NavigationProvider } from './contexts/NavigationContext';
 import { PortraitPage } from './pages/PortraitPage';
+import { AboutPage } from './pages/AboutPage';
 import { Hero } from './components/sections/Hero/Hero';
 import { Portrait } from './components/sections/Portrait/Portrait';
 import { Drama } from './components/sections/Drama/Drama';
 import { Career } from './components/sections/Career/Career';
 import { usePerformanceMonitor } from './hooks/usePerformanceMonitor';
 import { usePreload } from './hooks/usePreload';
+import { NavigationOverlay } from './components/ui/NavigationOverlay';
 
 // 性能监控组件
 function PerformanceMonitor() {
@@ -176,29 +179,33 @@ export function App() {
     <ErrorBoundary>
       <LanguageProvider>
         <DebugProvider>
-          <Router>
-            <ResourcePreloader />
-            <PerformanceMonitor />
-            <SkipLink />
-            <InlineProgressBar />
-            <div className="min-h-screen bg-black">
-              <Header />
-              <main id="main-content">
-                <Routes>
-                  <Route path="/" element={
-                    <>
-                      <Hero />
-                      <Portrait />
-                      <Drama />
-                      <Career />
-                    </>
-                  } />
-                  <Route path="/portrait" element={<PortraitPage />} />
-                </Routes>
-              </main>
-              <Footer />
-            </div>
-          </Router>
+          <NavigationProvider>
+            <Router>
+              <ResourcePreloader />
+              <PerformanceMonitor />
+              <SkipLink />
+              <InlineProgressBar />
+              <NavigationOverlay />
+              <div className="min-h-screen bg-black">
+                <Header />
+                <main id="main-content">
+                  <Routes>
+                    <Route path="/" element={
+                      <>
+                        <Hero />
+                        <Portrait />
+                        <Drama />
+                        <Career />
+                      </>
+                    } />
+                    <Route path="/about" element={<AboutPage />} />
+                    <Route path="/portrait" element={<PortraitPage />} />
+                  </Routes>
+                </main>
+                <Footer />
+              </div>
+            </Router>
+          </NavigationProvider>
         </DebugProvider>
       </LanguageProvider>
     </ErrorBoundary>

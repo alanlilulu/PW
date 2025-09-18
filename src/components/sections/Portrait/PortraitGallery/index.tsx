@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useDynamicAlbums } from '../../../../hooks/useDynamicAlbums';
+import { useNavigate } from 'react-router-dom';
+import { useNavigation } from '../../../../contexts/NavigationContext';
+import { motion } from 'framer-motion';
+import { HoverCard } from '../../../ui/HoverCard';
 
 export function PortraitGallery() {
   const [currentRow, setCurrentRow] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [clickedAlbum, setClickedAlbum] = useState<string | null>(null);
   const { albums, isLoading } = useDynamicAlbums();
+  const navigate = useNavigate();
+  const { setNavigating } = useNavigation();
   
   // 将相册的封面照片分成每行3张的行
   const rows = [];
@@ -52,6 +59,19 @@ export function PortraitGallery() {
     }
   };
 
+  const handleAlbumClick = (album: any) => {
+    // 设置点击状态和导航状态
+    setClickedAlbum(album.id);
+    setNavigating(true);
+
+    // 简短的延迟以显示加载效果
+    setTimeout(() => {
+      navigate(`/portrait?album=${encodeURIComponent(album.id)}`);
+      // 清除点击状态
+      setClickedAlbum(null);
+    }, 300);
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-6">
       {/* 加载状态 */}
@@ -72,10 +92,22 @@ export function PortraitGallery() {
             }`}
           >
             {rows[currentRow]?.map((album, index) => (
-              <div 
+              <HoverCard
                 key={`${currentRow}-${index}`}
-                className="group relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                scale={1.08}
+                shadow={true}
+                glow={true}
+                lift={true}
+                className={`group relative overflow-hidden rounded-lg shadow-lg cursor-pointer ${
+                  clickedAlbum === album.id ? 'scale-98 opacity-80' : ''
+                }`}
               >
+                <motion.div
+                  onClick={() => handleAlbumClick(album)}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ duration: 0.15 }}
+                  className="w-full h-full"
+                >
                 <img
                   src={album.mainPhoto.src}
                   alt={album.mainPhoto.alt}
@@ -83,10 +115,12 @@ export function PortraitGallery() {
                   loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                
                 <div className="absolute bottom-0 left-0 right-0 p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <p className="text-sm font-medium">{album.titleKey}</p>
                 </div>
-              </div>
+                </motion.div>
+              </HoverCard>
             ))}
           </div>
 

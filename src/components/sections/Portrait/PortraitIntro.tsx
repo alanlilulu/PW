@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../../../contexts/LanguageContext';
-import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export function PortraitIntro() {
@@ -15,16 +14,19 @@ export function PortraitIntro() {
       viewport={{ once: true }}
       transition={{ duration: 0.6 }}
     >
-      <h2 className="text-3xl font-serif mb-3">{t('portrait.title')}</h2>
-      <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-6">
-        探索我的人像摄影作品集，每一帧都捕捉着独特的瞬间与情感
-      </p>
+      <h2 className="text-4xl font-serif mb-8">{t('portrait.title')}</h2>
       <Link
         to="/portrait"
-        className="inline-flex items-center px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors duration-300 group"
+        className="group relative inline-flex items-center justify-center px-4 py-3 text-white font-medium text-sm transition-all duration-300 hover:scale-105"
       >
-        <span>查看详细作品集</span>
-        <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+        {/* 背景渐变 */}
+        <div className="absolute inset-0 bg-gradient-to-r from-gray-900 to-black rounded-full shadow-lg group-hover:shadow-xl transition-all duration-300" />
+        
+        {/* 内容 */}
+        <span className="relative z-10">{t('portrait.viewButton')}</span>
+        
+        {/* 悬停光效 */}
+        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </Link>
     </motion.div>
   );

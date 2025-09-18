@@ -8,13 +8,20 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useDebug } from '../contexts/DebugContext';
 import { useDynamicAlbums } from '../hooks/useDynamicAlbums';
 import { StorageManager } from '../components/StorageManager';
+import { useSearchParams } from 'react-router-dom';
+import { SuccessIndicator } from '../components/ui/SuccessIndicator';
+import { useNavigation } from '../contexts/NavigationContext';
 
 export function PortraitPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentGroup, setCurrentGroup] = useState<PortraitGroup | null>(null);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
-  const { debugMode, toggleDebugMode, showPhotoCounts } = useDebug();
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const { debugMode, toggleDebugMode, showPhotoCounts, showDebugUI } = useDebug();
   const { t } = useLanguage();
+  const [searchParams] = useSearchParams();
+  const { setNavigating } = useNavigation();
   
   // 使用动态相册发现
   const { albums, isLoading: albumsLoading, error: albumsError, refreshAlbums } = useDynamicAlbums();
@@ -28,9 +35,55 @@ export function PortraitPage() {
     setIsModalOpen(true);
   };
 
+  // 检测URL参数并自动打开对应相册
+  useEffect(() => {
+    const albumId = searchParams.get('album');
+    if (albumId && albums.length > 0) {
+      const targetAlbum = albums.find(album => album.id === decodeURIComponent(albumId));
+      if (targetAlbum) {
+        // 将动态相册转换为PortraitGroup格式
+        const portraitGroup: PortraitGroup = {
+          id: targetAlbum.id,
+          titleKey: targetAlbum.titleKey,
+          mainPhoto: targetAlbum.mainPhoto,
+          photos: targetAlbum.photos,
+          category: targetAlbum.category || '人像摄影',
+          location: targetAlbum.location || '未知地点',
+          date: targetAlbum.date || '未知日期',
+          folderPath: targetAlbum.folderPath
+        };
+        
+        setCurrentGroup(portraitGroup);
+        setCurrentPhotoIndex(0);
+        setIsModalOpen(true);
+        
+        // 显示成功指示器
+        setSuccessMessage('');
+        setShowSuccess(true);
+        
+        // 清除导航状态
+        setNavigating(false);
+        
+        // 清除URL参数
+        const newUrl = new URL(window.location.href);
+        newUrl.searchParams.delete('album');
+        window.history.replaceState({}, '', newUrl.toString());
+      }
+    }
+  }, [albums, searchParams]);
+
+  // 组件卸载时清除导航状态
+  useEffect(() => {
+    return () => {
+      setNavigating(false);
+    };
+  }, [setNavigating]);
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setCurrentGroup(null);
+    // 清除导航状态，确保加载遮罩消失
+    setNavigating(false);
   };
 
   const handlePrevious = (totalPhotos: number) => {
@@ -56,8 +109,8 @@ export function PortraitPage() {
       {/* 使用统一的 Header 组件 */}
       <Header />
 
-      {/* Debug Mode 开关和配置 - 仅在开发环境显示 */}
-      {import.meta.env.DEV && (
+      {/* Debug Mode 开关和配置 - 仅在通过URL参数激活时显示 */}
+      {showDebugUI && (
         <div className="fixed top-24 right-6 z-20 flex flex-col gap-3">
           {/* GitHub Token 配置 - 只在 debug mode 开启时显示 */}
           {debugMode && (
@@ -165,22 +218,24 @@ export function PortraitPage() {
                 </p>
               </motion.div>
               
-              {/* 刷新按钮 */}
-              <motion.button
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                onClick={refreshAlbums}
-                disabled={albumsLoading}
-                className={`p-3 rounded-full transition-all duration-200 ${
-                  albumsLoading 
-                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
-                    : 'bg-blue-500 text-white hover:bg-blue-600 hover:scale-105'
-                }`}
-                title="刷新相册"
-              >
-                <RefreshCw className={`w-5 h-5 ${albumsLoading ? 'animate-spin' : ''}`} />
-              </motion.button>
+              {/* 刷新按钮 - 仅在debug模式下显示 */}
+              {showDebugUI && (
+                <motion.button
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                  onClick={refreshAlbums}
+                  disabled={albumsLoading}
+                  className={`p-3 rounded-full transition-all duration-200 ${
+                    albumsLoading 
+                      ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
+                      : 'bg-blue-500 text-white hover:bg-blue-600 hover:scale-105'
+                  }`}
+                  title="刷新相册"
+                >
+                  <RefreshCw className={`w-5 h-5 ${albumsLoading ? 'animate-spin' : ''}`} />
+                </motion.button>
+              )}
             </div>
           </div>
         </section>
@@ -234,12 +289,14 @@ export function PortraitPage() {
               <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 max-w-md mx-auto">
                 <p className="text-gray-600 font-medium mb-2">没有找到相册</p>
                 <p className="text-gray-500 text-sm mb-4">GitHub 仓库中可能没有相册文件夹</p>
-                <button
-                  onClick={refreshAlbums}
-                  className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
-                >
-                  刷新
-                </button>
+                {showDebugUI && (
+                  <button
+                    onClick={refreshAlbums}
+                    className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                  >
+                    刷新
+                  </button>
+                )}
               </div>
             </div>
           )}
@@ -266,6 +323,13 @@ export function PortraitPage() {
           />
         )}
       </AnimatePresence>
+
+      {/* 成功跳转指示器 */}
+      <SuccessIndicator 
+        isVisible={showSuccess} 
+        message={successMessage} 
+        onComplete={() => setShowSuccess(false)} 
+      />
 
       {/* 存储管理组件 */}
       <StorageManager />
@@ -540,3 +604,4 @@ function PhotoGroupModal({
     </motion.div>
   );
 }
+

@@ -36,12 +36,13 @@ export function Navigation() {
     <nav className="flex items-center space-x-8">
       {navigationItems.map((item) => {
         if (isHomePage) {
-          // 主页：Portrait 标签跳转到独立页面，其他标签使用锚点导航
-          if (item.href === '#portrait') {
+          // 主页：About 和 Portrait 标签跳转到独立页面，其他标签使用锚点导航
+          if (item.href === '#hero' || item.href === '#portrait') {
+            const path = item.href === '#hero' ? '/about' : '/portrait';
             return (
               <a
                 key={item.name}
-                href="/portrait"
+                href={path}
                 className="text-gray-600 hover:text-gray-900 transition-colors"
               >
                 {t(item.translationKey)}
@@ -60,7 +61,10 @@ export function Navigation() {
           }
         } else {
           // 其他页面：所有标签都使用路由导航
-          const path = item.href === '#portrait' ? '/portrait' : '/';
+          let path = '/';
+          if (item.href === '#hero') path = '/about';
+          else if (item.href === '#portrait') path = '/portrait';
+          
           return (
             <a
               key={item.name}
