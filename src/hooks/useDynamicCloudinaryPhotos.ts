@@ -51,37 +51,37 @@ export function useDynamicCloudinaryPhotos() {
     setError(null);
 
     try {
-      // 定义照片组配置
+      // 定义照片组配置 - 更新为实际的Cloudinary文件夹路径
       const groupConfigs = [
         {
           id: 'seattle-tulips',
           title: '西雅图郁金香',
-          folder: 'portfolio-images/seattle-tulips'
+          folder: 'image-repo/portrait/seattle-tulips'
         },
         {
           id: 'california-ditto',
           title: '加州阳光',
-          folder: 'portfolio-images/california-ditto'
+          folder: 'image-repo/portrait/california-ditto'
         },
         {
           id: 'uw-graduation',
           title: '毕业季',
-          folder: 'portfolio-images/uw-graduation'
+          folder: 'image-repo/portrait/uw-graduation'
         },
         {
           id: 'cherry-blossom',
           title: '樱花季',
-          folder: 'portfolio-images/cherry-blossom'
+          folder: 'image-repo/portrait/cherry-blossom'
         },
         {
           id: 'first-meeting',
           title: '初次见面',
-          folder: 'portfolio-images/first-meeting'
+          folder: 'image-repo/portrait/first-meeting'
         },
         {
           id: 'seattle-couples',
           title: '情侣时光',
-          folder: 'portfolio-images/seattle-couples'
+          folder: 'image-repo/portrait/seattle-couples'
         }
       ];
 
@@ -99,9 +99,19 @@ export function useDynamicCloudinaryPhotos() {
         }
       }
 
-      setPhotoGroups(groups);
+      // 如果没有找到Cloudinary照片，使用静态数据作为备用
+      if (groups.length === 0) {
+        console.log('Cloudinary中没有找到照片，使用静态数据作为备用');
+        // 这里可以添加静态数据，或者保持空数组
+        setPhotoGroups([]);
+      } else {
+        setPhotoGroups(groups);
+      }
     } catch (err) {
+      console.error('Cloudinary加载失败:', err);
       setError(err instanceof Error ? err.message : '加载照片失败');
+      // 即使出错也设置空数组，避免undefined
+      setPhotoGroups([]);
     } finally {
       setIsLoading(false);
     }

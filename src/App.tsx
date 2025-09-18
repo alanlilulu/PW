@@ -6,6 +6,7 @@ import { LanguageProvider } from './contexts/LanguageContext';
 import { DebugProvider, useDebug } from './contexts/DebugContext';
 import { NavigationProvider } from './contexts/NavigationContext';
 import { PortraitPage } from './pages/PortraitPage';
+import { PortraitPageTest } from './pages/PortraitPageTest';
 import { AboutPage } from './pages/AboutPage';
 import { PhotoManagementPage } from './pages/PhotoManagementPage';
 import { Hero } from './components/sections/Hero/Hero';
@@ -201,6 +202,7 @@ export function App() {
                     } />
                     <Route path="/about" element={<AboutPage />} />
                     <Route path="/portrait" element={<PortraitPage />} />
+                    <Route path="/portrait-test" element={<PortraitPageTest />} />
                     <Route path="/photo-management" element={<PhotoManagementPage />} />
                   </Routes>
                 </main>

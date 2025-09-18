@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portrait Page Test</title>
+</head>
+<body>
+    <h1>Portrait Page Test</h1>
+    <p>Testing if the page loads correctly...</p>
+    
+    <script>
+        // Test Cloudinary configuration
+        const cloudName = 'do0c7uhxc';
+        console.log('Cloudinary Cloud Name:', cloudName);
+        
+        // Test API call
+        fetch(`https://res.cloudinary.com/${cloudName}/image/list/portfolio-images/seattle-tulips.json`)
+            .then(response => response.json())
+            .then(data => {
+                console.log('Cloudinary API Response:', data);
+                document.body.innerHTML += '<p>✅ Cloudinary API working</p>';
+            })
+            .catch(error => {
+                console.error('Cloudinary API Error:', error);
+                document.body.innerHTML += '<p>❌ Cloudinary API error: ' + error.message + '</p>';
+            });
+    </script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PortraitGroup } from '../data/portraitGroups';
-import { useDynamicPortraitGroups } from '../data/dynamicPortraitGroups';
+import { useHybridPortraitGroups } from '../hooks/useHybridPortraitGroups';
 import { Header } from '../components/layout/Header';
 import { X, ChevronLeft, ChevronRight, Loader2, Bug, RefreshCw } from 'lucide-react';
 import { usePhotoGroup } from '../hooks/usePhotoGroup';
@@ -23,6 +23,9 @@ export function PortraitPage() {
   const { t } = useLanguage();
   const [searchParams] = useSearchParams();
   const { setNavigating } = useNavigation();
+  
+  // 使用混合照片组
+  const { portraitGroups, isLoading: groupsLoading, error: groupsError, dataSource } = useHybridPortraitGroups();
   
   // 使用动态相册发现
   const { albums, isLoading: albumsLoading, error: albumsError, refreshAlbums } = useDynamicAlbums();

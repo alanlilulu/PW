@@ -8,12 +8,12 @@ import { SectionWrapper } from '../../ui/SectionWrapper';
 import { SectionContent } from '../../ui/SectionContent';
 import { DecorativeElement } from '../../ui/DecorativeElement';
 import { HoverCard } from '../../ui/HoverCard';
-import { useDynamicPortraitGroups } from '../../../data/dynamicPortraitGroups';
+import { useHybridPortraitGroups } from '../../../hooks/useHybridPortraitGroups';
 import { LoadingSpinner } from '../../ui/LoadingSpinner';
 
 export function Portrait() {
   const { showDebugUI } = useDebug();
-  const { portraitGroups, isLoading, error } = useDynamicPortraitGroups();
+  const { portraitGroups, isLoading, error, dataSource } = useHybridPortraitGroups();
   
   return (
     <SectionWrapper id="portrait" background="white">
