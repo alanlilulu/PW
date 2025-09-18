@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { PortraitGroup } from '../data/portraitGroups';
-import { useDynamicPortraitGroups } from '../data/dynamicPortraitGroups';
+import { portraitGroups, PortraitGroup } from '../data/portraitGroups';
 import { Header } from '../components/layout/Header';
 import { X, ChevronLeft, ChevronRight, Loader2, Bug, RefreshCw } from 'lucide-react';
 import { usePhotoGroup } from '../hooks/usePhotoGroup';
@@ -244,7 +243,7 @@ export function PortraitPage() {
         {/* 照片组网格 */}
         <section className="max-w-7xl mx-auto px-6 mb-20">
           {/* 加载状态 */}
-          {groupsLoading || albumsLoading || (
+          {albumsLoading && (
             <div className="text-center py-20">
               <Loader2 className="w-12 h-12 animate-spin text-blue-500 mx-auto mb-4" />
               <p className="text-lg text-gray-600">正在从 GitHub 发现相册...</p>
@@ -253,7 +252,7 @@ export function PortraitPage() {
           )}
 
           {/* 错误状态 */}
-          {groupsError || albumsError || !groupsLoading || albumsLoading || (
+          {albumsError && !albumsLoading && (
             <div className="text-center py-20">
               <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md mx-auto">
                 <p className="text-red-600 font-medium mb-2">相册加载失败</p>
@@ -269,9 +268,9 @@ export function PortraitPage() {
           )}
 
           {/* 相册网格 */}
-          {!groupsLoading || albumsLoading || !groupsError || albumsError || albums.length > 0 && (
+          {!albumsLoading && !albumsError && albums.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {(portraitGroups.length > 0 ? portraitGroups : albums).map((group, index) => (
+              {albums.map((group, index) => (
                 <PhotoGroupCard 
                   key={group.id} 
                   group={group} 
@@ -285,7 +284,7 @@ export function PortraitPage() {
           )}
 
           {/* 空状态 */}
-          {!groupsLoading || albumsLoading || !groupsError || albumsError || portraitGroups.length === 0 && albums.length === 0 && (
+          {!albumsLoading && !albumsError && albums.length === 0 && (
             <div className="text-center py-20">
               <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 max-w-md mx-auto">
                 <p className="text-gray-600 font-medium mb-2">没有找到相册</p>
