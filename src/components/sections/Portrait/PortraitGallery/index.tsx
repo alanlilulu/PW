@@ -1,175 +1,173 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useDynamicAlbums } from '../../../../hooks/useDynamicAlbums';
 import { useNavigate } from 'react-router-dom';
 import { useNavigation } from '../../../../contexts/NavigationContext';
 import { motion } from 'framer-motion';
 import { HoverCard } from '../../../ui/HoverCard';
 
-export function PortraitGallery() {
+interface PortraitGroup {
+  id: string;
+  titleKey: string;
+  mainPhoto: {
+    src: string;
+    alt: string;
+  };
+  photos: Array<{
+    src: string;
+    alt: string;
+    description?: string;
+  }>;
+  category: string;
+  location: string;
+  date: string;
+  folderPath: string;
+}
+
+interface PortraitGalleryProps {
+  groups: PortraitGroup[];
+}
+
+export function PortraitGallery({ groups }: PortraitGalleryProps) {
   const [currentRow, setCurrentRow] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [clickedAlbum, setClickedAlbum] = useState<string | null>(null);
-  const { albums, isLoading } = useDynamicAlbums();
   const navigate = useNavigate();
   const { setNavigating } = useNavigation();
   
   // 将相册的封面照片分成每行3张的行
   const rows = [];
-  if (albums.length > 0) {
-    for (let i = 0; i < albums.length; i += 3) {
-      rows.push(albums.slice(i, i + 3));
+  if (groups.length > 0) {
+    for (let i = 0; i < groups.length; i += 3) {
+      rows.push(groups.slice(i, i + 3));
     }
   }
 
-  // 当相册数据加载完成后，重置当前行
-  useEffect(() => {
-    if (albums.length > 0 && currentRow >= rows.length) {
-      setCurrentRow(0);
-    }
-  }, [albums, currentRow, rows.length]);
-
-  const handlePrevious = () => {
-    if (currentRow > 0 && !isAnimating) {
-      setIsAnimating(true);
-      setTimeout(() => {
-        setCurrentRow(currentRow - 1);
-        setIsAnimating(false);
-      }, 300);
-    }
-  };
-
-  const handleNext = () => {
-    if (currentRow < rows.length - 1 && !isAnimating) {
-      setIsAnimating(true);
-      setTimeout(() => {
-        setCurrentRow(currentRow + 1);
-        setIsAnimating(false);
-      }, 300);
-    }
-  };
-
-  const handleDotClick = (index: number) => {
-    if (index !== currentRow && !isAnimating) {
-      setIsAnimating(true);
-      setTimeout(() => {
-        setCurrentRow(index);
-        setIsAnimating(false);
-      }, 300);
-    }
-  };
-
-  const handleAlbumClick = (album: any) => {
-    // 设置点击状态和导航状态
+  const handleAlbumClick = (album: PortraitGroup) => {
     setClickedAlbum(album.id);
     setNavigating(true);
-
-    // 简短的延迟以显示加载效果
+    
+    // 延迟导航，让用户看到点击效果
     setTimeout(() => {
-      navigate(`/portrait?album=${encodeURIComponent(album.id)}`);
-      // 清除点击状态
-      setClickedAlbum(null);
+      navigate(`/portrait?album=${album.id}`);
     }, 300);
   };
 
+  const handlePreviousRow = () => {
+    if (currentRow > 0 && !isAnimating) {
+      setIsAnimating(true);
+      setCurrentRow(currentRow - 1);
+      setTimeout(() => setIsAnimating(false), 500);
+    }
+  };
+
+  const handleNextRow = () => {
+    if (currentRow < rows.length - 1 && !isAnimating) {
+      setIsAnimating(true);
+      setCurrentRow(currentRow + 1);
+      setTimeout(() => setIsAnimating(false), 500);
+    }
+  };
+
+  if (groups.length === 0) {
+    return (
+      <div className="text-center py-16 text-gray-500">
+        <p>暂无照片组</p>
+        <p className="text-sm mt-2">请在Cloudinary控制台上传照片到对应文件夹</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="max-w-7xl mx-auto px-6">
-      {/* 加载状态 */}
-      {isLoading && (
-        <div className="text-center py-20">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-lg text-gray-600">正在加载相册...</p>
-        </div>
-      )}
-
-      {/* 相册 carousel */}
-      {!isLoading && albums.length > 0 && (
-        <div className="relative overflow-hidden" style={{ height: '600px' }}>
-          {/* 当前行显示 */}
-          <div 
-            className={`grid grid-cols-3 gap-6 transition-all duration-300 ease-in-out ${
-              isAnimating ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
-            }`}
+    <div className="relative">
+      {/* 导航按钮 */}
+      {rows.length > 1 && (
+        <>
+          <button
+            onClick={handlePreviousRow}
+            disabled={currentRow === 0 || isAnimating}
+            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 p-2 bg-white rounded-full shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {rows[currentRow]?.map((album, index) => (
-              <HoverCard
-                key={`${currentRow}-${index}`}
-                scale={1.08}
-                shadow={true}
-                glow={true}
-                lift={true}
-                className={`group relative overflow-hidden rounded-lg shadow-lg cursor-pointer ${
-                  clickedAlbum === album.id ? 'scale-98 opacity-80' : ''
-                }`}
-              >
-                <motion.div
-                  onClick={() => handleAlbumClick(album)}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ duration: 0.15 }}
-                  className="w-full h-full"
-                >
-                <img
-                  src={album.mainPhoto.src}
-                  alt={album.mainPhoto.alt}
-                  className="w-full h-[600px] object-cover transition-transform duration-300 group-hover:scale-110"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                
-                <div className="absolute bottom-0 left-0 right-0 p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <p className="text-sm font-medium">{album.titleKey}</p>
-                </div>
-                </motion.div>
-              </HoverCard>
-            ))}
-          </div>
-
-          {/* 导航按钮 */}
-          {currentRow > 0 && (
-            <button
-              onClick={handlePrevious}
-              disabled={isAnimating}
-              className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-10 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </button>
-          )}
+            <ChevronLeft className="w-6 h-6 text-gray-600" />
+          </button>
           
-          {currentRow < rows.length - 1 && (
-            <button
-              onClick={handleNext}
-              disabled={isAnimating}
-              className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-10 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <ChevronRight className="w-6 h-6" />
-            </button>
-          )}
-
-          {/* 行指示器 */}
-          {rows.length > 1 && (
-            <div className="flex justify-center mt-6 space-x-2">
-              {rows.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleDotClick(index)}
-                  disabled={isAnimating}
-                  className={`w-3 h-3 rounded-full transition-all duration-200 ${
-                    index === currentRow 
-                      ? 'bg-blue-500 scale-125' 
-                      : 'bg-gray-300 hover:bg-gray-400'
-                  }`}
-                />
-              ))}
-            </div>
-          )}
-        </div>
+          <button
+            onClick={handleNextRow}
+            disabled={currentRow === rows.length - 1 || isAnimating}
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 p-2 bg-white rounded-full shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <ChevronRight className="w-6 h-6 text-gray-600" />
+          </button>
+        </>
       )}
 
-      {/* 空状态 */}
-      {!isLoading && albums.length === 0 && (
-        <div className="text-center py-20">
-          <p className="text-lg text-gray-600">暂无相册</p>
-          <p className="text-sm text-gray-400 mt-2">请检查 GitHub 仓库中的相册文件夹</p>
+      {/* 相册网格 */}
+      <div className="overflow-hidden">
+        <motion.div
+          className="flex transition-transform duration-500 ease-in-out"
+          style={{ transform: `translateX(-${currentRow * 100}%)` }}
+        >
+          {rows.map((row, rowIndex) => (
+            <div key={rowIndex} className="w-full flex-shrink-0">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {row.map((album) => (
+                  <HoverCard
+                    key={album.id}
+                    scale={1.08}
+                    shadow={true}
+                    glow={true}
+                    lift={true}
+                    className="cursor-pointer"
+                  >
+                    <motion.div
+                      onClick={() => handleAlbumClick(album)}
+                      whileTap={{ scale: 0.98 }}
+                      transition={{ duration: 0.1 }}
+                      className="relative group"
+                    >
+                      <div className="aspect-[4/3] overflow-hidden rounded-lg">
+                        <img
+                          src={album.mainPhoto.src}
+                          alt={album.mainPhoto.alt}
+                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          loading="lazy"
+                        />
+                      </div>
+                      
+                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 rounded-lg flex items-center justify-center">
+                        <div className="opacity-0 group-hover:opacity-100 transition-opacity text-white text-center">
+                          <h3 className="text-lg font-semibold mb-1">
+                            {album.id.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                          </h3>
+                          <p className="text-sm">{album.photos.length} 张照片</p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  </HoverCard>
+                ))}
+              </div>
+            </div>
+          ))}
+        </motion.div>
+      </div>
+
+      {/* 分页指示器 */}
+      {rows.length > 1 && (
+        <div className="flex justify-center mt-8 space-x-2">
+          {rows.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => {
+                setIsAnimating(true);
+                setCurrentRow(index);
+                setTimeout(() => setIsAnimating(false), 500);
+              }}
+              className={`w-3 h-3 rounded-full transition-all ${
+                index === currentRow
+                  ? 'bg-blue-500 scale-125'
+                  : 'bg-gray-300 hover:bg-gray-400'
+              }`}
+            />
+          ))}
         </div>
       )}
     </div>

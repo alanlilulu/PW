@@ -3,7 +3,8 @@ export const zh = {
     about: '关于',
     portrait: '人像',
     drama: '戏剧',
-    career: '职业'
+    career: '职业',
+    photoManagement: '照片管理'
   },
 
   hero: {

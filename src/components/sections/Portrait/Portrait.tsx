@@ -8,9 +8,12 @@ import { SectionWrapper } from '../../ui/SectionWrapper';
 import { SectionContent } from '../../ui/SectionContent';
 import { DecorativeElement } from '../../ui/DecorativeElement';
 import { HoverCard } from '../../ui/HoverCard';
+import { useDynamicPortraitGroups } from '../../../data/dynamicPortraitGroups';
+import { LoadingSpinner } from '../../ui/LoadingSpinner';
 
 export function Portrait() {
   const { showDebugUI } = useDebug();
+  const { portraitGroups, isLoading, error } = useDynamicPortraitGroups();
   
   return (
     <SectionWrapper id="portrait" background="white">
@@ -19,36 +22,47 @@ export function Portrait() {
         position="top-left" 
         size="lg" 
         color="blue" 
-        delay={1.2}
-        opacity={0.05}
+        delay={0.2}
+        direction="center"
       />
-      
-      {/* Portrait介绍从上方飞入 */}
-      <SectionContent direction="down" delay={0.2} distance={120} duration={1.8}>
-        <div className="max-w-7xl mx-auto px-6 mb-16">
-          <PortraitIntro />
-          
-          {/* 手动刷新按钮 - 仅在debug模式下显示 */}
-          {showDebugUI && (
-            <div className="text-center mt-8">
-              <HoverCard scale={1.05} shadow={true} lift={true}>
-                <button
-                  onClick={() => window.location.reload()}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-                >
-                  <RefreshCw className="w-4 h-4" />
-                  刷新相册数据
-                </button>
-              </HoverCard>
-            </div>
-          )}
-        </div>
+
+      {/* 主要内容 */}
+      <SectionContent direction="down" delay={0.1}>
+        <PortraitIntro />
       </SectionContent>
-      
-      {/* 相册画廊从下方飞入 */}
-      <SectionContent direction="up" delay={0.6} distance={100} duration={2.0}>
-        <PortraitGallery />
+
+      {/* 照片画廊 */}
+      <SectionContent direction="up" delay={0.3}>
+        {isLoading ? (
+          <div className="flex justify-center items-center py-16">
+            <LoadingSpinner />
+            <span className="ml-2 text-gray-600">加载照片中...</span>
+          </div>
+        ) : error ? (
+          <div className="text-center py-16 text-red-600">
+            <p>加载照片失败: {error}</p>
+            <p className="text-sm text-gray-500 mt-2">
+              请检查Cloudinary配置或网络连接
+            </p>
+          </div>
+        ) : (
+          <PortraitGallery groups={portraitGroups} />
+        )}
       </SectionContent>
+
+      {/* 调试工具 */}
+      {showDebugUI && (
+        <HoverCard className="fixed top-32 right-6 z-20">
+          <button
+            onClick={() => window.location.reload()}
+            className="flex items-center gap-2 px-3 py-2 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+            title="刷新照片数据"
+          >
+            <RefreshCw className="w-4 h-4" />
+            <span>刷新照片</span>
+          </button>
+        </HoverCard>
+      )}
     </SectionWrapper>
   );
 }

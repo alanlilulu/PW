@@ -7,6 +7,7 @@ import { DebugProvider, useDebug } from './contexts/DebugContext';
 import { NavigationProvider } from './contexts/NavigationContext';
 import { PortraitPage } from './pages/PortraitPage';
 import { AboutPage } from './pages/AboutPage';
+import { PhotoManagementPage } from './pages/PhotoManagementPage';
 import { Hero } from './components/sections/Hero/Hero';
 import { Portrait } from './components/sections/Portrait/Portrait';
 import { Drama } from './components/sections/Drama/Drama';
@@ -200,6 +201,7 @@ export function App() {
                     } />
                     <Route path="/about" element={<AboutPage />} />
                     <Route path="/portrait" element={<PortraitPage />} />
+                    <Route path="/photo-management" element={<PhotoManagementPage />} />
                   </Routes>
                 </main>
                 <Footer />

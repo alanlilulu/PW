@@ -3,7 +3,8 @@ export const en = {
     about: 'About',
     portrait: 'Portrait',
     drama: 'Drama',
-    career: 'Career'
+    career: 'Career',
+    photoManagement: 'Photo Management'
   },
 
   hero: {
