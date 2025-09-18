@@ -1,0 +1,61 @@
+@import './styles/card-flip.css';
+@import './styles/scrollbar-hide.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 自定义动画 */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 主题CSS变量 */
+:root {
+  /* 浅色主题 */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f3f4f6;
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --accent-color: #3b82f6;
+  --border-color: #e5e7eb;
+}
+
+.dark {
+  /* 深色主题 */
+  --bg-primary: #111827;
+  --bg-secondary: #1f2937;
+  --text-primary: #f9fafb;
+  --text-secondary: #d1d5db;
+  --accent-color: #60a5fa;
+  --border-color: #374151;
+}
+
+/* 主题过渡动画 */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* 强制应用主题样式 */
+.light {
+  background-color: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+}
+
+.dark {
+  background-color: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+}
+
+/* 确保body和html也应用主题 */
+html.light,
+html.dark {
+  background-color: var(--bg-primary) !important;
+}
+
+body.light,
+body.dark {
+  background-color: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+}
