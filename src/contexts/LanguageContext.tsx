@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode, useCallback, useMemo, useRef } from 'react';
 import { translations } from '../translations';
+import { useLocation } from 'react-router-dom';
 
 type Language = 'en' | 'zh';
 
@@ -39,6 +40,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   // 使用ref来跟踪是否已经初始化
   const isInitialized = useRef(false);
+  const location = useLocation();
 
   // 初始化时从localStorage读取语言
   useEffect(() => {
@@ -50,6 +52,16 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       isInitialized.current = true;
     }
   }, []);
+
+  // 监听路由变化，确保语言状态不会因为路由变化而重置
+  useEffect(() => {
+    console.log('LanguageProvider: Route changed to', location.pathname, 'current language:', language);
+    // 如果语言状态被重置，从存储中恢复
+    if (language === 'en' && globalLanguage !== 'en') {
+      console.log('LanguageProvider: Language was reset, restoring from global state:', globalLanguage);
+      setLanguageState(globalLanguage);
+    }
+  }, [location.pathname, language]);
 
   // 当语言改变时，保存到localStorage和全局状态
   useEffect(() => {
