@@ -15,18 +15,29 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 const getStoredLanguage = (): Language => {
   if (typeof window !== 'undefined') {
     const stored = localStorage.getItem('preferred-language');
+    console.log('LanguageProvider: Retrieved from localStorage:', stored);
     return (stored === 'zh' || stored === 'en') ? stored : 'en';
   }
   return 'en';
 };
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = useState<Language>(getStoredLanguage);
+  const [language, setLanguage] = useState<Language>(() => {
+    const storedLang = getStoredLanguage();
+    console.log('LanguageProvider: Initializing with language:', storedLang);
+    return storedLang;
+  });
+
+  // 调试日志
+  useEffect(() => {
+    console.log('LanguageProvider: Language changed to', language);
+  }, [language]);
 
   // 当语言改变时，保存到localStorage
   useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('preferred-language', language);
+      console.log('LanguageProvider: Saved language to localStorage:', language);
     }
   }, [language]);
 

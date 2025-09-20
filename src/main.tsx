@@ -5,9 +5,7 @@ import './index.css';
 import { registerServiceWorker } from './utils/serviceWorker';
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>
+  <App />
 );
 
 // Register service worker for production
