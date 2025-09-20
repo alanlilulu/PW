@@ -1,0 +1,66 @@
+{
+  "name": "个人作品展示网站",
+  "short_name": "作品展示",
+  "description": "展示戏剧作品、肖像摄影和职业经历的综合性个人网站",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "zh-CN",
+  "icons": [
+    {
+      "src": "/vite.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["art", "photography", "portfolio"],
+  "screenshots": [
+    {
+      "src": "/screenshot-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/screenshot-narrow.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "作品展示",
+      "short_name": "作品",
+      "description": "查看作品展示",
+      "url": "/#portrait",
+      "icons": [
+        {
+          "src": "/shortcut-portrait.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "戏剧作品",
+      "short_name": "戏剧",
+      "description": "查看戏剧作品",
+      "url": "/#drama",
+      "icons": [
+        {
+          "src": "/shortcut-drama.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}
+
+
+
