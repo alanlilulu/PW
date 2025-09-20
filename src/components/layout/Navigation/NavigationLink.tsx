@@ -27,11 +27,12 @@ export function NavigationLink({ href, children, isActive }: NavigationLinkProps
     <motion.a
       href={href}
       onClick={handleClick}
-      className={`text-sm font-medium transition-colors duration-200 ${
+      className={`text-sm font-medium transition-colors duration-200 cursor-pointer ${
         isActive ? 'text-gray-900' : 'text-gray-600 hover:text-gray-900'
       }`}
-      whileHover={{ scale: 1.05 }}
+      whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}
+      transition={{ duration: 0.2 }}
     >
       {children}
     </motion.a>

@@ -8,7 +8,6 @@ export * from './LazyImage';
 export * from './LikeButton';
 export * from './LoadingSpinner';
 export * from './OptimizedImage';
-export * from './PageProgress';
 export * from './SEO';
 export * from './SkipLink';
 export * from './icons/XiaohongshuIcon';

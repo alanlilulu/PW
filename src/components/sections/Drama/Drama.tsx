@@ -53,8 +53,8 @@ export function Drama() {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="group relative inline-flex items-center justify-center px-8 py-4 text-black font-medium transition-all duration-300"
                 onClick={() => {
-                  // 暂时滚动到页面顶部，将来可以跳转到Drama页面
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                  // 跳转到Drama页面
+                  window.location.href = '/drama';
                 }}
               >
                 {/* 背景渐变 */}

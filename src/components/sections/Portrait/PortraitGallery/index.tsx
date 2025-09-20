@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useNavigation } from '../../../../contexts/NavigationContext';
@@ -30,7 +30,6 @@ interface PortraitGalleryProps {
 export function PortraitGallery({ groups }: PortraitGalleryProps) {
   const [currentRow, setCurrentRow] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [clickedAlbum, setClickedAlbum] = useState<string | null>(null);
   const navigate = useNavigate();
   const { setNavigating } = useNavigation();
   
@@ -43,7 +42,6 @@ export function PortraitGallery({ groups }: PortraitGalleryProps) {
   }
 
   const handleAlbumClick = (album: PortraitGroup) => {
-    setClickedAlbum(album.id);
     setNavigating(true);
     
     // 延迟导航，让用户看到点击效果
@@ -78,41 +76,40 @@ export function PortraitGallery({ groups }: PortraitGalleryProps) {
   }
 
   return (
-    <div className="relative">
-      {/* 导航按钮 */}
-      {rows.length > 1 && (
-        <>
-          <button
-            onClick={handlePreviousRow}
-            disabled={currentRow === 0 || isAnimating}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 p-2 bg-white rounded-full shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <ChevronLeft className="w-6 h-6 text-gray-600" />
-          </button>
-          
-          <button
-            onClick={handleNextRow}
-            disabled={currentRow === rows.length - 1 || isAnimating}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 p-2 bg-white rounded-full shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <ChevronRight className="w-6 h-6 text-gray-600" />
-          </button>
-        </>
-      )}
-
+    <div className="relative px-4 md:px-8 lg:px-16 xl:px-24">
       {/* 相册网格 */}
-      <div className="overflow-hidden">
+      <div className="overflow-hidden mt-8 relative">
+        {/* 导航按钮 - 现在在相册网格内部 */}
+        {rows.length > 1 && (
+          <>
+            <button
+              onClick={handlePreviousRow}
+              disabled={currentRow === 0 || isAnimating}
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 bg-white/95 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed border border-gray-200"
+            >
+              <ChevronLeft className="w-5 h-5 text-gray-700" />
+            </button>
+            
+            <button
+              onClick={handleNextRow}
+              disabled={currentRow === rows.length - 1 || isAnimating}
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 bg-white/95 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed border border-gray-200"
+            >
+              <ChevronRight className="w-5 h-5 text-gray-700" />
+            </button>
+          </>
+        )}
         <motion.div
           className="flex transition-transform duration-500 ease-in-out"
           style={{ transform: `translateX(-${currentRow * 100}%)` }}
         >
           {rows.map((row, rowIndex) => (
             <div key={rowIndex} className="w-full flex-shrink-0">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10 xl:gap-12 max-w-6xl mx-auto">
                 {row.map((album) => (
                   <HoverCard
                     key={album.id}
-                    scale={1.08}
+                    scale={1.03}
                     shadow={true}
                     glow={true}
                     lift={true}
@@ -124,7 +121,7 @@ export function PortraitGallery({ groups }: PortraitGalleryProps) {
                       transition={{ duration: 0.1 }}
                       className="relative group"
                     >
-                      <div className="aspect-[4/3] overflow-hidden rounded-lg">
+                      <div className="aspect-[3/4] overflow-hidden rounded-xl shadow-lg">
                         <img
                           src={album.mainPhoto.src}
                           alt={album.mainPhoto.alt}
@@ -133,8 +130,8 @@ export function PortraitGallery({ groups }: PortraitGalleryProps) {
                         />
                       </div>
                       
-                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 rounded-lg flex items-center justify-center">
-                        <div className="opacity-0 group-hover:opacity-100 transition-opacity text-white text-center">
+                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 rounded-xl flex items-center justify-center">
+                        <div className="opacity-0 group-hover:opacity-100 transition-opacity text-white text-center px-4">
                           <h3 className="text-lg font-semibold mb-1">
                             {album.id.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
                           </h3>
@@ -152,7 +149,7 @@ export function PortraitGallery({ groups }: PortraitGalleryProps) {
 
       {/* 分页指示器 */}
       {rows.length > 1 && (
-        <div className="flex justify-center mt-8 space-x-2">
+        <div className="flex justify-center mt-16 space-x-4">
           {rows.map((_, index) => (
             <button
               key={index}
@@ -161,10 +158,10 @@ export function PortraitGallery({ groups }: PortraitGalleryProps) {
                 setCurrentRow(index);
                 setTimeout(() => setIsAnimating(false), 500);
               }}
-              className={`w-3 h-3 rounded-full transition-all ${
+              className={`w-4 h-4 rounded-full transition-all duration-300 ${
                 index === currentRow
-                  ? 'bg-blue-500 scale-125'
-                  : 'bg-gray-300 hover:bg-gray-400'
+                  ? 'bg-blue-500 scale-125 shadow-md'
+                  : 'bg-gray-300 hover:bg-gray-400 hover:scale-110'
               }`}
             />
           ))}

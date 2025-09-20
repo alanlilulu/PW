@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PortraitGroup } from '../data/portraitGroups';
-import { useHybridPortraitGroups } from '../hooks/useHybridPortraitGroups';
+import { useDynamicCloudinaryPortrait } from '../hooks/useDynamicCloudinaryPortrait';
 import { Header } from '../components/layout/Header';
 import { X, ChevronLeft, ChevronRight, Loader2, Bug, RefreshCw } from 'lucide-react';
 import { usePhotoGroup } from '../hooks/usePhotoGroup';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useDebug } from '../contexts/DebugContext';
-import { useDynamicAlbums } from '../hooks/useDynamicAlbums';
-import { StorageManager } from '../components/StorageManager';
+import { useAssetFolderAlbums } from '../hooks/useAssetFolderAlbums';
 import { useSearchParams } from 'react-router-dom';
 import { SuccessIndicator } from '../components/ui/SuccessIndicator';
 import { useNavigation } from '../contexts/NavigationContext';
@@ -24,11 +23,18 @@ export function PortraitPage() {
   const [searchParams] = useSearchParams();
   const { setNavigating } = useNavigation();
   
-  // 使用混合照片组
-  const { portraitGroups, isLoading: groupsLoading, error: groupsError, dataSource } = useHybridPortraitGroups();
+  // 使用动态Cloudinary照片组
+  const { 
+    portraitGroups, 
+    loading: groupsLoading, 
+    error: groupsError, 
+    totalPhotos, 
+    hasMore, 
+    loadMore 
+  } = useDynamicCloudinaryPortrait();
   
-  // 使用动态相册发现
-  const { albums, isLoading: albumsLoading, error: albumsError, refreshAlbums } = useDynamicAlbums();
+  // 使用动态相册发现（仅在Cloudinary失败时使用）
+  const { albums, isLoading: albumsLoading, error: albumsError } = useAssetFolderAlbums();
 
   const handleGroupClick = (group: PortraitGroup) => {
     console.log('点击照片组:', t(group.titleKey));
@@ -43,18 +49,26 @@ export function PortraitPage() {
   useEffect(() => {
     const albumId = searchParams.get('album');
     if (albumId && albums.length > 0) {
-      const targetAlbum = albums.find(album => album.id === decodeURIComponent(albumId));
+      const targetAlbum = albums.find((album: any) => album.id === decodeURIComponent(albumId));
       if (targetAlbum) {
         // 将动态相册转换为PortraitGroup格式
         const portraitGroup: PortraitGroup = {
           id: targetAlbum.id,
-          titleKey: targetAlbum.titleKey,
-          mainPhoto: targetAlbum.mainPhoto,
-          photos: targetAlbum.photos,
-          category: targetAlbum.category || '人像摄影',
-          location: targetAlbum.location || '未知地点',
-          date: targetAlbum.date || '未知日期',
-          folderPath: targetAlbum.folderPath
+          titleKey: targetAlbum.title, // 使用title作为titleKey
+          mainPhoto: {
+            src: targetAlbum.coverImage,
+            alt: `${targetAlbum.title} - 封面照片`,
+          },
+          photos: targetAlbum.images.map(img => ({
+            src: img.url,
+            alt: img.alt,
+            width: img.width,
+            height: img.height,
+          })),
+          category: "人像摄影",
+          location: targetAlbum.location || "未知地点",
+          date: targetAlbum.uploadDate || new Date().toISOString().split('T')[0],
+          folderPath: targetAlbum.folderPath,
         };
         
         setCurrentGroup(portraitGroup);
@@ -137,7 +151,7 @@ export function PortraitPage() {
               </p>
               <div className="flex gap-2 mt-2">
                 <button
-                  onClick={refreshAlbums}
+                  onClick={() => window.location.reload()}
                   className="flex-1 px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
                 >
                   重新获取相册
@@ -220,25 +234,54 @@ export function PortraitPage() {
                 <p className="text-lg text-gray-600 leading-relaxed">
                   {t('portrait.pageDescription')}
                 </p>
+                {/* Debug模式下显示照片统计 */}
+                {showDebugUI && (
+                  <div className="mt-2 text-sm text-gray-500">
+                    <p>动态加载: {totalPhotos} 张照片</p>
+                    <p>照片组: {portraitGroups.length} 个</p>
+                    {hasMore && <p className="text-green-600">还有更多照片可加载</p>}
+                  </div>
+                )}
               </motion.div>
               
               {/* 刷新按钮 - 仅在debug模式下显示 */}
               {showDebugUI && (
-                <motion.button
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
-                  onClick={refreshAlbums}
-                  disabled={albumsLoading}
-                  className={`p-3 rounded-full transition-all duration-200 ${
-                    albumsLoading 
-                      ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
-                      : 'bg-blue-500 text-white hover:bg-blue-600 hover:scale-105'
-                  }`}
-                  title="刷新相册"
-                >
-                  <RefreshCw className={`w-5 h-5 ${albumsLoading ? 'animate-spin' : ''}`} />
-                </motion.button>
+                <div className="flex gap-2">
+                  <motion.button
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.6, delay: 0.4 }}
+                    onClick={() => window.location.reload()}
+                    disabled={albumsLoading}
+                    className={`p-3 rounded-full transition-all duration-200 ${
+                      albumsLoading 
+                        ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
+                        : 'bg-blue-500 text-white hover:bg-blue-600 hover:scale-105'
+                    }`}
+                    title="刷新相册"
+                  >
+                    <RefreshCw className={`w-5 h-5 ${albumsLoading ? 'animate-spin' : ''}`} />
+                  </motion.button>
+                  
+                  {/* 加载更多Cloudinary照片按钮 */}
+                  {hasMore && (
+                    <motion.button
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.6, delay: 0.5 }}
+                      onClick={loadMore}
+                      disabled={groupsLoading}
+                      className={`p-3 rounded-full transition-all duration-200 ${
+                        groupsLoading 
+                          ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
+                          : 'bg-green-500 text-white hover:bg-green-600 hover:scale-105'
+                      }`}
+                      title={`加载更多照片 (当前: ${totalPhotos}张)`}
+                    >
+                      <RefreshCw className={`w-5 h-5 ${groupsLoading ? 'animate-spin' : ''}`} />
+                    </motion.button>
+                  )}
+                </div>
               )}
             </div>
           </div>
@@ -247,22 +290,22 @@ export function PortraitPage() {
         {/* 照片组网格 */}
         <section className="max-w-7xl mx-auto px-6 mb-20">
           {/* 加载状态 */}
-          {groupsLoading || albumsLoading || (
+          {groupsLoading && (
             <div className="text-center py-20">
               <Loader2 className="w-12 h-12 animate-spin text-blue-500 mx-auto mb-4" />
-              <p className="text-lg text-gray-600">正在从 GitHub 发现相册...</p>
+              <p className="text-lg text-gray-600">正在从 Cloudinary 加载照片...</p>
               <p className="text-sm text-gray-400 mt-2">这可能需要几秒钟时间</p>
             </div>
           )}
 
-          {/* 错误状态 */}
-          {groupsError || albumsError || !groupsLoading || albumsLoading || (
+          {/* 错误状态 - 只在Cloudinary失败且没有照片时显示 */}
+          {groupsError && !groupsLoading && portraitGroups.length === 0 && (
             <div className="text-center py-20">
               <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md mx-auto">
-                <p className="text-red-600 font-medium mb-2">相册加载失败</p>
-                <p className="text-red-500 text-sm mb-4">{albumsError}</p>
+                <p className="text-red-600 font-medium mb-2">Cloudinary照片加载失败</p>
+                <p className="text-red-500 text-sm mb-4">{groupsError}</p>
                 <button
-                  onClick={refreshAlbums}
+                  onClick={() => window.location.reload()}
                   className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
                 >
                   重试
@@ -272,9 +315,25 @@ export function PortraitPage() {
           )}
 
           {/* 相册网格 */}
-          {!groupsLoading || albumsLoading || !groupsError || albumsError || albums.length > 0 && (
+          {!groupsLoading && !groupsError && portraitGroups.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {(portraitGroups.length > 0 ? portraitGroups : albums).map((group, index) => (
+              {portraitGroups.map((group, index) => (
+                <PhotoGroupCard 
+                  key={group.id} 
+                  group={group} 
+                  index={index}
+                  onGroupClick={handleGroupClick}
+                  debugMode={debugMode}
+                  showPhotoCounts={showPhotoCounts}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* GitHub相册网格（仅在Cloudinary失败时显示） */}
+          {!groupsLoading && groupsError && !albumsLoading && !albumsError && albums.length > 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {albums.map((group: any, index: number) => (
                 <PhotoGroupCard 
                   key={group.id} 
                   group={group} 
@@ -288,18 +347,26 @@ export function PortraitPage() {
           )}
 
           {/* 空状态 */}
-          {!groupsLoading || albumsLoading || !groupsError || albumsError || portraitGroups.length === 0 && albums.length === 0 && (
+          {!groupsLoading && !albumsLoading && !groupsError && !albumsError && portraitGroups.length === 0 && albums.length === 0 && (
             <div className="text-center py-20">
               <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 max-w-md mx-auto">
                 <p className="text-gray-600 font-medium mb-2">没有找到相册</p>
-                <p className="text-gray-500 text-sm mb-4">GitHub 仓库中可能没有相册文件夹</p>
+                <p className="text-gray-500 text-sm mb-4">Cloudinary 和 GitHub 都没有找到照片</p>
                 {showDebugUI && (
-                  <button
-                    onClick={refreshAlbums}
-                    className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
-                  >
-                    刷新
-                  </button>
+                  <div className="flex gap-2 justify-center">
+                    <button
+                      onClick={() => window.location.reload()}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                      刷新Cloudinary
+                    </button>
+                    <button
+                      onClick={() => window.location.reload()}
+                      className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                    >
+                      刷新GitHub
+                    </button>
+                  </div>
                 )}
               </div>
             </div>
@@ -336,7 +403,7 @@ export function PortraitPage() {
       />
 
       {/* 存储管理组件 */}
-      <StorageManager />
+      {/* StorageManager 组件已删除 */}
     </div>
   );
 }
@@ -356,7 +423,6 @@ function PhotoGroupCard({
   showPhotoCounts: boolean;
 }) {
   const { photos, coverPhoto, isLoading, error } = usePhotoGroup(group);
-  const { t } = useLanguage();
 
   // 调试信息 - 只在 debugMode 开启时显示
   if (debugMode) {
@@ -365,7 +431,10 @@ function PhotoGroupCard({
       coverPhoto: coverPhoto?.src,
       isLoading,
       error,
-      folderPath: group.folderPath
+      folderPath: group.folderPath,
+      groupPhotos: group.photos?.length || 0,
+      groupMainPhoto: group.mainPhoto?.src,
+      hasDynamicData: !!(group.photos && group.photos.length > 0)
     });
   }
 
@@ -389,8 +458,16 @@ function PhotoGroupCard({
             alt={coverPhoto.alt}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
+            onLoad={() => {
+              if (debugMode) {
+                console.log('封面照片加载成功:', coverPhoto.src);
+              }
+            }}
             onError={(e) => {
               console.error('封面照片加载失败:', coverPhoto.src);
+              if (debugMode) {
+                console.log('图片加载失败，隐藏图片元素');
+              }
               e.currentTarget.style.display = 'none';
               e.currentTarget.nextElementSibling?.classList.remove('hidden');
             }}
@@ -424,6 +501,7 @@ function PhotoGroupCard({
         <div className="text-xs text-gray-400 text-center mt-2">
           <p>照片数量: {photos.length}</p>
           <p>文件夹: {group.id}</p>
+          <p>数据源: 动态Cloudinary</p>
         </div>
       )}
     </motion.div>
@@ -447,7 +525,6 @@ function PhotoGroupModal({
   onThumbnailClick: (index: number, totalPhotos: number) => void;
 }) {
   const { photos, isLoading, error } = usePhotoGroup(group);
-  const { t } = useLanguage();
 
   if (isLoading) {
     return (

@@ -1,213 +1,127 @@
-import React, { useState, useEffect } from 'react';
-import { useLazyImage } from '../../hooks/useLazyImage';
+import React, { useState, useRef, useEffect } from 'react';
+import { motion } from 'framer-motion';
 
 interface OptimizedImageProps {
   src: string;
   alt: string;
-  fallback?: string;
   className?: string;
-  style?: React.CSSProperties;
-  placeholder?: React.ReactNode;
-  quality?: number;
-  format?: 'webp' | 'avif' | 'auto';
+  placeholder?: string;
+  loading?: 'lazy' | 'eager';
+  priority?: boolean;
   sizes?: string;
   onLoad?: () => void;
   onError?: () => void;
 }
 
-export const OptimizedImage: React.FC<OptimizedImageProps> = ({
+export function OptimizedImage({
   src,
   alt,
-  fallback,
   className = '',
-  style = {},
   placeholder,
-  quality = 80,
-  format = 'auto',
-  sizes = '100vw',
+  loading = 'lazy',
+  priority = false,
+  sizes,
   onLoad,
   onError
-}) => {
-  const [imageFormat, setImageFormat] = useState<string>('jpeg');
-  const [optimizedSrc, setOptimizedSrc] = useState<string>('');
-  const [isFormatSupported, setIsFormatSupported] = useState<boolean>(false);
-  
-  const { imgRef, imageSrc, isLoaded, isInView } = useLazyImage(
-    optimizedSrc || src, 
-    { fallback }
-  );
+}: OptimizedImageProps) {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const [isInView, setIsInView] = useState(priority);
+  const imgRef = useRef<HTMLImageElement>(null);
 
-  // 检测浏览器支持的图片格式
+  // Intersection Observer for lazy loading
   useEffect(() => {
-    const detectFormat = async () => {
-      try {
-        if (format === 'auto' || format === 'webp') {
-          const webpSupported = await testWebPSupport();
-          if (webpSupported) {
-            setImageFormat('webp');
-            setIsFormatSupported(true);
-            return;
-          }
+    if (priority || isInView) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          observer.disconnect();
         }
-        
-        if (format === 'auto' || format === 'avif') {
-          const avifSupported = await testAVIFSupport();
-          if (avifSupported) {
-            setImageFormat('avif');
-            setIsFormatSupported(true);
-            return;
-          }
-        }
-        
-        setImageFormat('jpeg');
-        setIsFormatSupported(false);
-      } catch (error) {
-        console.warn('Format detection failed:', error);
-        setImageFormat('jpeg');
-        setIsFormatSupported(false);
+      },
+      {
+        rootMargin: '50px',
+        threshold: 0.1
       }
-    };
+    );
 
-    detectFormat();
-  }, [format]);
-
-  // 生成优化后的图片URL
-  useEffect(() => {
-    if (isFormatSupported && imageFormat !== 'jpeg') {
-      const optimizedUrl = generateOptimizedUrl(src, imageFormat, quality);
-      setOptimizedSrc(optimizedUrl);
-    } else {
-      setOptimizedSrc(src);
+    if (imgRef.current) {
+      observer.observe(imgRef.current);
     }
-  }, [src, imageFormat, quality, isFormatSupported]);
+
+    return () => observer.disconnect();
+  }, [priority, isInView]);
 
   const handleLoad = () => {
-    if (onLoad) onLoad();
+    setIsLoaded(true);
+    onLoad?.();
   };
 
   const handleError = () => {
-    if (onError) onError();
+    setHasError(true);
+    onError?.();
   };
 
+  // Generate optimized src with Cloudinary transformations
+  const getOptimizedSrc = (originalSrc: string) => {
+    if (!originalSrc.includes('cloudinary.com') && !originalSrc.includes('unsplash.com')) {
+      return originalSrc;
+    }
+
+    // For Cloudinary images, add optimization parameters
+    if (originalSrc.includes('cloudinary.com')) {
+      const baseUrl = originalSrc.split('/upload/')[0];
+      const path = originalSrc.split('/upload/')[1];
+      return `${baseUrl}/upload/w_auto,c_auto,f_auto,q_auto/${path}`;
+    }
+
+    // For Unsplash images, add optimization parameters
+    if (originalSrc.includes('unsplash.com')) {
+      const separator = originalSrc.includes('?') ? '&' : '?';
+      return `${originalSrc}${separator}w=800&h=600&fit=crop&crop=center&auto=format&q=80`;
+    }
+
+    return originalSrc;
+  };
+
+  const optimizedSrc = getOptimizedSrc(src);
+
   return (
-    <div className={className} style={style}>
-      {!isLoaded && placeholder && (
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: '#f3f4f6',
-            color: '#6b7280',
-            fontSize: '14px',
-            minHeight: '200px'
-          }}
-        >
-          {placeholder}
+    <div ref={imgRef} className={`relative overflow-hidden ${className}`}>
+      {/* Placeholder */}
+      {!isLoaded && !hasError && (
+        <div className="absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center">
+          {placeholder && (
+            <div className="text-gray-400 text-4xl">{placeholder}</div>
+          )}
         </div>
       )}
-      
-      <img
-        ref={imgRef}
-        src={imageSrc}
-        alt={alt}
-        onLoad={handleLoad}
-        onError={handleError}
-        style={{
-          width: '100%',
-          height: 'auto',
-          opacity: isLoaded ? 1 : 0,
-          transition: 'opacity 0.3s ease',
-          ...style
-        }}
-      />
-      
-      {!isInView && (
-        <div
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            backgroundColor: '#f3f4f6',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '12px',
-            color: '#9ca3af'
-          }}
-        >
-          加载中...
+
+      {/* Error state */}
+      {hasError && (
+        <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
+          <div className="text-gray-400 text-4xl">📷</div>
         </div>
       )}
-      
-      {/* 格式信息提示 */}
-      {isFormatSupported && (
-        <div
-          style={{
-            position: 'absolute',
-            top: '8px',
-            right: '8px',
-            backgroundColor: 'rgba(0, 0, 0, 0.7)',
-            color: 'white',
-            padding: '4px 8px',
-            borderRadius: '4px',
-            fontSize: '10px',
-            fontFamily: 'monospace'
-          }}
-        >
-          {imageFormat.toUpperCase()}
-        </div>
+
+      {/* Actual image */}
+      {isInView && !hasError && (
+        <motion.img
+          src={optimizedSrc}
+          alt={alt}
+          className={`w-full h-full object-cover transition-opacity duration-300 ${
+            isLoaded ? 'opacity-100' : 'opacity-0'
+          }`}
+          loading={loading}
+          sizes={sizes}
+          onLoad={handleLoad}
+          onError={handleError}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: isLoaded ? 1 : 0 }}
+          transition={{ duration: 0.3 }}
+        />
       )}
     </div>
   );
-};
-
-// 测试WebP支持
-const testWebPSupport = (): Promise<boolean> => {
-  return new Promise((resolve) => {
-    const canvas = document.createElement('canvas');
-    canvas.width = 1;
-    canvas.height = 1;
-    
-    try {
-      const dataURL = canvas.toDataURL('image/webp');
-      resolve(dataURL !== 'data:,');
-    } catch {
-      resolve(false);
-    }
-  });
-};
-
-// 测试AVIF支持
-const testAVIFSupport = (): Promise<boolean> => {
-  return new Promise((resolve) => {
-    const canvas = document.createElement('canvas');
-    canvas.width = 1;
-    canvas.height = 1;
-    
-    try {
-      const dataURL = canvas.toDataURL('image/avif');
-      resolve(dataURL !== 'data:,');
-    } catch {
-      resolve(false);
-    }
-  });
-};
-
-// 生成优化后的图片URL
-const generateOptimizedUrl = (src: string, format: string, quality: number): string => {
-  // 这里可以集成真实的图片优化服务
-  // 目前返回原URL，实际使用时需要替换为真实的优化服务
-  if (format === 'webp' && quality < 100) {
-    return `${src}?format=webp&quality=${quality}`;
-  }
-  if (format === 'avif' && quality < 100) {
-    return `${src}?format=avif&quality=${quality}`;
-  }
-  return src;
-};
-
-export default OptimizedImage;
-
+}

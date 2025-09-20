@@ -127,3 +127,5 @@ const generateSrcSet = (src: string, format: string, quality: number): string =>
   return srcSetParts.join(', ');
 };
 
+
+

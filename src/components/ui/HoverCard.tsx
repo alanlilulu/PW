@@ -27,13 +27,13 @@ export function HoverCard({
         scale: 1,
         rotate: 0,
         y: 0,
-        boxShadow: '0 4px 20px rgba(0,0,0,0.1)'
+        boxShadow: shadow ? '0 4px 20px rgba(0,0,0,0.1)' : 'none'
       }}
       whileHover={{
         scale,
         rotate,
         y: lift ? -8 : 0,
-        boxShadow: shadow ? '0 25px 50px rgba(0,0,0,0.15)' : undefined,
+        boxShadow: shadow ? '0 25px 50px rgba(0,0,0,0.15)' : 'none',
         filter: glow ? 'brightness(1.1) saturate(1.1)' : undefined
       }}
       whileTap={{ 

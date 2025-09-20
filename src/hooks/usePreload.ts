@@ -175,3 +175,5 @@ function getResourceType(url: string): string {
   }
 }
 
+
+

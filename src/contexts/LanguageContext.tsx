@@ -1,5 +1,7 @@
-import React, { createContext, useContext, useState } from 'react';
-import { translations, Language, TranslationKey } from '../translations';
+import { createContext, useContext, useState, ReactNode } from 'react';
+import { translations } from '../translations';
+
+type Language = 'en' | 'zh';
 
 interface LanguageContextType {
   language: Language;
@@ -9,7 +11,7 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
+export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState<Language>('en');
 
   const t = (key: string): string => {
@@ -17,8 +19,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     let value: any = translations[language];
     
     for (const k of keys) {
-      if (value === undefined) return key;
-      value = value[k];
+      value = value?.[k];
     }
     
     return value || key;

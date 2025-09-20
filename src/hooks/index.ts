@@ -6,4 +6,6 @@ export { useLikes } from './useLikes';
 export { useScrollTo } from './useScrollTo';
 export { useSectionInView } from './useSectionInView';
 export { usePhotoGroup } from './usePhotoGroup';
-export { useDynamicAlbums } from './useDynamicAlbums';
+export { useAssetFolderAlbums } from './useAssetFolderAlbums';
+export { useDynamicCloudinaryMetadata } from './useDynamicCloudinaryMetadata';
+export { useDynamicCloudinaryPortrait } from './useDynamicCloudinaryPortrait';

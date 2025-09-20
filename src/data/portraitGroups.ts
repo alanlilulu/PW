@@ -2,6 +2,8 @@ export interface PortraitPhoto {
   src: string;
   alt: string;
   description?: string;
+  width?: number;
+  height?: number;
 }
 
 export interface PortraitGroup {
@@ -20,27 +22,27 @@ export const portraitGroups: PortraitGroup[] = [
     id: 'seattle-tulips',
     titleKey: 'portrait.groups.seattleTulips',
     mainPhoto: {
-      src: "https://raw.githubusercontent.com/lalavl/portfolio-images/main/portrait/seattle-tulips/没看过西雅图的郁金香，白活了！_1_阿龙📷_来自小红书网页版.jpg",
+      src: "https://raw.githubusercontent.com/lalavl/portfolio-images/main/portrait/seattle-tulips/tulip-portrait-1.jpg",
       alt: "西雅图郁金香人像摄影作品"
     },
     photos: [
       {
-        src: "https://raw.githubusercontent.com/lalavl/portfolio-images/main/portrait/seattle-tulips/没看过西雅图的郁金香，白活了！_1_阿龙📷_来自小红书网页版.jpg",
+        src: "https://raw.githubusercontent.com/lalavl/portfolio-images/main/portrait/seattle-tulips/tulip-portrait-1.jpg",
         alt: "西雅图郁金香人像摄影作品 - 主图",
         description: "在郁金香花海中捕捉的清新人像"
       },
       {
-        src: "https://raw.githubusercontent.com/lalavl/portfolio-images/main/portrait/seattle-tulips/tulip-portrait-1.jpg",
+        src: "https://raw.githubusercontent.com/lalavl/portfolio-images/main/portrait/seattle-tulips/没看过西雅图的郁金香，白活了！_2_阿龙📷_来自小红书网页版.jpg",
         alt: "西雅图郁金香人像摄影作品 - 侧脸特写",
         description: "侧脸特写，突出人物轮廓和花朵背景"
       },
       {
-        src: "https://raw.githubusercontent.com/lalavl/portfolio-images/main/portrait/seattle-tulips/tulip-portrait-2.jpg",
+        src: "https://raw.githubusercontent.com/lalavl/portfolio-images/main/portrait/seattle-tulips/没看过西雅图的郁金香，白活了！_3_阿龙📷_来自小红书网页版.jpg",
         alt: "西雅图郁金香人像摄影作品 - 全身构图",
         description: "全身构图，展现人物与环境的和谐"
       },
       {
-        src: "https://raw.githubusercontent.com/lalavl/portfolio-images/main/portrait/seattle-tulips/tulip-portrait-3.jpg",
+        src: "https://raw.githubusercontent.com/lalavl/portfolio-images/main/portrait/seattle-tulips/没看过西雅图的郁金香，白活了！_4_阿龙📷_来自小红书网页版.jpg",
         alt: "西雅图郁金香人像摄影作品 - 花海漫步",
         description: "在郁金香花海中漫步的唯美瞬间"
       }

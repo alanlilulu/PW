@@ -1,19 +1,17 @@
-import React from 'react';
 import { PortraitIntro } from './PortraitIntro';
 import { PortraitGallery } from './PortraitGallery';
-import { motion } from 'framer-motion';
 import { RefreshCw } from 'lucide-react';
 import { useDebug } from '../../../contexts/DebugContext';
 import { SectionWrapper } from '../../ui/SectionWrapper';
 import { SectionContent } from '../../ui/SectionContent';
 import { DecorativeElement } from '../../ui/DecorativeElement';
 import { HoverCard } from '../../ui/HoverCard';
-import { useHybridPortraitGroups } from '../../../hooks/useHybridPortraitGroups';
+import { useDynamicCloudinaryPortrait } from '../../../hooks/useDynamicCloudinaryPortrait';
 import { LoadingSpinner } from '../../ui/LoadingSpinner';
 
 export function Portrait() {
   const { showDebugUI } = useDebug();
-  const { portraitGroups, isLoading, error, dataSource } = useHybridPortraitGroups();
+  const { portraitGroups, loading: isLoading, error } = useDynamicCloudinaryPortrait();
   
   return (
     <SectionWrapper id="portrait" background="white">
@@ -23,7 +21,6 @@ export function Portrait() {
         size="lg" 
         color="blue" 
         delay={0.2}
-        direction="center"
       />
 
       {/* 主要内容 */}

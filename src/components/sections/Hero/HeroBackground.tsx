@@ -10,11 +10,20 @@ export function HeroBackground() {
       transition={{ duration: 1.2 }}
     >
       <img
-        src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4"
-        alt=""
-        className="w-full h-full object-cover"
+        src="https://res.cloudinary.com/do0c7uhxc/image/upload/v1758270867/ChatGPT_Image_Sep_19_2025_01_34_06_AM_pvrbmo.png"
+        alt="摄影师阿龙的个人作品"
+        className="w-full h-full object-cover object-center"
+        style={{
+          objectPosition: 'center center', // 将人物居中
+          // 移除所有滤镜效果，保留原有颜色
+        }}
+        onError={(e) => {
+          // 如果图片加载失败，显示纯色背景
+          e.currentTarget.style.display = 'none';
+        }}
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/70 to-black/90" />
+      {/* 轻度的渐变遮罩，保持文字可读性 */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-black/20" />
     </motion.div>
   );
 }

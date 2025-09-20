@@ -4,6 +4,8 @@ import { Header } from '../components/layout/Header';
 import { Container } from '../components/ui/Container';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useDebug } from '../contexts/DebugContext';
+import { Timeline } from '../components/sections/About/Timeline';
+import { timelineEvents } from '../data/timelineData';
 
 export function AboutPage() {
   const { t } = useLanguage();
@@ -119,10 +121,10 @@ export function AboutPage() {
                   {t('about.technicalSkills')}
                 </h3>
                 <ul className="space-y-2 text-gray-600">
-                  <li>• React & TypeScript</li>
-                  <li>• User Experience Design</li>
-                  <li>• Product Strategy</li>
-                  <li>• Photography & Visual Arts</li>
+                  <li>• SWE @ Lululemon — led experimentation & testing platforms ($200M+ revenue impact)</li>
+                  <li>• Full-stack A/B testing frameworks</li>
+                  <li>• Human-Computer Interaction (HCI)</li>
+                  <li>• Product design & strategy</li>
                 </ul>
               </motion.div>
 
@@ -137,10 +139,10 @@ export function AboutPage() {
                   {t('about.creativeInterests')}
                 </h3>
                 <ul className="space-y-2 text-gray-600">
-                  <li>• Portrait Photography</li>
-                  <li>• Theater Performance</li>
-                  <li>• Digital Art Creation</li>
-                  <li>• Storytelling</li>
+                  <li>• Photographer with growing side business in Seattle (graduation shoots, creative portraits)</li>
+                  <li>• Director & actor in multiple Chinese theatre productions</li>
+                  <li>• MC of a Seattle Chinese radio</li>
+                  <li>• Storytelling through photography & theatre</li>
                 </ul>
               </motion.div>
 
@@ -155,13 +157,41 @@ export function AboutPage() {
                   {t('about.philosophy')}
                 </h3>
                 <ul className="space-y-2 text-gray-600">
-                  <li>• User-Centered Design</li>
-                  <li>• Data-Driven Decisions</li>
-                  <li>• Collaborative Innovation</li>
-                  <li>• Continuous Learning</li>
+                  <li>• UMich CS '22, with minors in Math & Complex Systems</li>
+                  <li>• Based in Seattle</li>
+                  <li>• Combining engineering, design, and creativity</li>
+                  <li>• Building products people truly need</li>
                 </ul>
               </motion.div>
             </div>
+          </Container>
+        </section>
+
+        {/* 人生时间线 */}
+        <section className="py-20 bg-gradient-to-br from-gray-50 to-white">
+          <Container>
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 1.6 }}
+              className="text-center mb-16"
+            >
+              <h2 className="text-4xl font-serif mb-6 text-gray-900">
+                {t('about.timelineTitle') || 'My Life Journey'}
+              </h2>
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                {t('about.timelineDescription') || 'From Sichuan to Qingdao, from Penn State to University of Michigan, from first theatre performance to becoming a director, from photographer to software engineer - these key moments have shaped who I am today.'}
+              </p>
+            </motion.div>
+
+            {/* 时间线组件 */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 1.8 }}
+            >
+              <Timeline events={timelineEvents} />
+            </motion.div>
           </Container>
         </section>
       </main>

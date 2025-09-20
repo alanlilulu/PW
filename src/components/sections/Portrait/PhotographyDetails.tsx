@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { portraitImages } from '../../../data/portraitImages';
 import { X, ChevronLeft, ChevronRight, Heart, Share2, Download } from 'lucide-react';
