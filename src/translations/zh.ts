@@ -9,7 +9,7 @@ export const zh = {
 
   hero: {
     greeting: '你好。',
-    intro: '我是李阿伦',
+    intro: '我是李安龙',
     title: '软件工程师、摄影师与戏剧导演',
     description: '我创造数字体验并捕捉人类故事——通过代码、设计和镜头。',
     aboutButton: '了解更多关于我'
@@ -18,7 +18,7 @@ export const zh = {
   about: {
     pageTitle: '关于我',
     pageDescription: '软件工程师、摄影师和戏剧导演，现居西雅图',
-    personalTitle: '你好，我是李阿伦 👋',
+    personalTitle: '你好，我是李安龙 👋',
     personalDescription1: '我是一名软件工程师，现居西雅图，目前在Lululemon的数字优化团队工作。我的工作专注于构建和维护全栈A/B测试框架和实验工具，直接影响数百万客户。',
     personalDescription2: '除了工程学，我对人机交互(HCI)和产品设计深感兴趣。我喜欢探索人们如何与技术互动，以及深思熟虑的设计如何塑造有意义的数字体验。',
     personalDescription3: '在技术之外，我是一名摄影师📷和戏剧导演/演员🎭。摄影让我通过镜头捕捉真实的时刻和故事，而戏剧训练我从不同角度理解人、同理心和讲故事。',
@@ -46,7 +46,20 @@ export const zh = {
     },
     pageTitle: '人像摄影',
     pageDescription: '通过镜头捕捉人物的真实情感与独特瞬间，每一帧都是对生活的深刻观察与艺术表达',
-    viewButton: '查看作品'
+    viewButton: '查看作品',
+    loading: {
+      title: '正在从 Cloudinary 加载照片...',
+      subtitle: '这可能需要几秒钟时间'
+    },
+    error: {
+      title: 'Cloudinary照片加载失败',
+      retry: '重试'
+    },
+    empty: {
+      title: '没有找到相册',
+      subtitle: 'Cloudinary 中没有找到照片',
+      refresh: '刷新'
+    }
   },
 
   drama: {

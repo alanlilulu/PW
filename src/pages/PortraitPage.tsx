@@ -68,10 +68,10 @@ export function PortraitPage() {
         <section className="max-w-7xl mx-auto px-6 mb-16">
           <div className="flex items-center justify-between">
             <h1 className="text-5xl font-bold text-gray-900">
-              Portrait Photography
+              {t('portrait.pageTitle') || 'Portrait Photography'}
             </h1>
             <p className="text-lg text-gray-600 leading-relaxed max-w-md">
-              Through the lens, I capture authentic emotions and unique moments, each frame a profound observation and artistic expression of life.
+              {t('portrait.pageDescription') || 'Through the lens, I capture authentic emotions and unique moments, each frame a profound observation and artistic expression of life.'}
             </p>
           </div>
         </section>
@@ -82,8 +82,8 @@ export function PortraitPage() {
           {groupsLoading && (
             <div className="text-center py-20">
               <Loader2 className="w-12 h-12 animate-spin text-blue-500 mx-auto mb-4" />
-              <p className="text-lg text-gray-600">正在从 Cloudinary 加载照片...</p>
-              <p className="text-sm text-gray-400 mt-2">这可能需要几秒钟时间</p>
+              <p className="text-lg text-gray-600">{t('portrait.loading.title') || '正在从 Cloudinary 加载照片...'}</p>
+              <p className="text-sm text-gray-400 mt-2">{t('portrait.loading.subtitle') || '这可能需要几秒钟时间'}</p>
             </div>
           )}
 
@@ -91,13 +91,13 @@ export function PortraitPage() {
           {groupsError && !groupsLoading && (
             <div className="text-center py-20">
               <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md mx-auto">
-                <p className="text-red-600 font-medium mb-2">Cloudinary照片加载失败</p>
+                <p className="text-red-600 font-medium mb-2">{t('portrait.error.title') || 'Cloudinary照片加载失败'}</p>
                 <p className="text-red-500 text-sm mb-4">{groupsError}</p>
                 <button
                   onClick={() => window.location.reload()}
                   className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
                 >
-                  重试
+                  {t('portrait.error.retry') || '重试'}
                 </button>
               </div>
             </div>
@@ -121,13 +121,13 @@ export function PortraitPage() {
           {!groupsLoading && !groupsError && portraitGroups.length === 0 && (
             <div className="text-center py-20">
               <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 max-w-md mx-auto">
-                <p className="text-gray-600 font-medium mb-2">没有找到相册</p>
-                <p className="text-gray-500 text-sm mb-4">Cloudinary 中没有找到照片</p>
+                <p className="text-gray-600 font-medium mb-2">{t('portrait.empty.title') || '没有找到相册'}</p>
+                <p className="text-gray-500 text-sm mb-4">{t('portrait.empty.subtitle') || 'Cloudinary 中没有找到照片'}</p>
                 <button
                   onClick={() => window.location.reload()}
                   className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
-                  刷新
+                  {t('portrait.empty.refresh') || '刷新'}
                 </button>
               </div>
             </div>
@@ -138,7 +138,7 @@ export function PortraitPage() {
       {/* 页脚 */}
       <footer className="border-t border-gray-200 py-8">
         <div className="max-w-7xl mx-auto px-6 text-center text-gray-600">
-          <p>© 2025 AL Photography. All rights reserved.</p>
+          <p>{t('footer.rights') || '© 2025 AL Photography. All rights reserved.'}</p>
         </div>
       </footer>
 

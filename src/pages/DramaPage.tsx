@@ -339,10 +339,10 @@ export function DramaPage() {
               transition={{ delay: 0.6, duration: 0.6 }}
             >
               <h2 className="text-2xl md:text-4xl font-serif mb-4 md:mb-6 text-gray-900">
-                Recent Works (2024-2025)
+                {t('drama.performances.recent.title') || 'Recent Works (2024-2025)'}
               </h2>
               <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
-                Key roles and productions in my theatrical career
+                {t('drama.performances.description') || 'Key roles and productions in my theatrical career'}
               </p>
             </motion.div>
 
@@ -400,7 +400,7 @@ export function DramaPage() {
               transition={{ delay: 0.9, duration: 0.6 }}
             >
               <h2 className="text-2xl md:text-4xl font-serif mb-4 md:mb-6 text-gray-900">
-                Classic Productions (2018-2022)
+                {t('drama.performances.classic.title') || 'Classic Productions (2018-2022)'}
               </h2>
             </motion.div>
 

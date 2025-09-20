@@ -9,7 +9,7 @@ export const en = {
 
   hero: {
     greeting: 'Hi.',
-    intro: "I'm Alan Li",
+    intro: "I'm Alan Li (李安龙)",
     title: 'Software Engineer, Photographer & Theatre Director',
     description: "I create digital experiences and capture human stories — through code, design, and lens.",
     aboutButton: 'Learn More About Me'
@@ -18,7 +18,7 @@ export const en = {
   about: {
     pageTitle: 'About Me',
     pageDescription: 'Software Engineer, Photographer, and Theatre Director based in Seattle',
-    personalTitle: 'Hi, I\'m Alan Li 👋',
+    personalTitle: 'Hi, I\'m Alan Li (李安龙) 👋',
     personalDescription1: 'I\'m a Software Engineer based in Seattle, currently working at Lululemon on the Digital Optimization team. My work focuses on building and maintaining full-stack A/B testing frameworks and experimentation tools that directly impact millions of customers.',
     personalDescription2: 'Beyond engineering, I\'m deeply interested in Human–Computer Interaction (HCI) and product design. I enjoy exploring how people interact with technology and how thoughtful design can shape meaningful digital experiences.',
     personalDescription3: 'Outside of tech, I\'m a photographer 📷 and a theatre director/actor 🎭. Photography allows me to capture real moments and stories through my lens, while theatre has trained me to understand people, empathy, and storytelling from a different perspective.',
@@ -46,7 +46,20 @@ export const en = {
     },
     pageTitle: 'Portrait Photography',
     pageDescription: 'Through the lens, I capture authentic emotions and unique moments, each frame a profound observation and artistic expression of life.',
-    viewButton: 'View Works'
+    viewButton: 'View Works',
+    loading: {
+      title: 'Loading photos from Cloudinary...',
+      subtitle: 'This may take a few seconds'
+    },
+    error: {
+      title: 'Cloudinary photo loading failed',
+      retry: 'Retry'
+    },
+    empty: {
+      title: 'No albums found',
+      subtitle: 'No photos found in Cloudinary',
+      refresh: 'Refresh'
+    }
   },
 
   drama: {
@@ -56,7 +69,7 @@ export const en = {
     journey: {
       title: 'My Drama Journey',
       intro: "I am both an actor and director, and the stage is where I explore humanity and storytelling. Over the years, I have portrayed dozens of characters through different genres of plays and directed two major theatrical productions.",
-      description1: 'Alan is an active Chinese theater actor and director in Seattle and campus theater circles, with over 7 years of stage experience.',
+      description1: 'Alan Li (李安龙) is an active Chinese theater actor and director in Seattle and campus theater circles, with over 7 years of stage experience.',
       description2: 'He excels at portraying distinctive, multi-layered characters and explores relationships and inner worlds through performance.',
       description3: 'His theatrical journey spans from absurdist plays and comedies to suspense dramas, while also serving as a director for mystery and spy thrillers.'
     },
