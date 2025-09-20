@@ -22,6 +22,14 @@ export function PortraitPage() {
     loadMore 
   } = useDynamicCloudinaryPortrait();
 
+  // 临时调试：显示加载状态和错误信息
+  console.log('PortraitPage状态:', {
+    groupsLoading,
+    groupsError,
+    portraitGroupsCount: portraitGroups.length,
+    portraitGroups: portraitGroups.map(g => ({ id: g.id, title: g.title, photosCount: g.photos.length }))
+  });
+
   const handleGroupClick = (group: PortraitGroup) => {
     setCurrentGroup(group);
     setCurrentPhotoIndex(0);
