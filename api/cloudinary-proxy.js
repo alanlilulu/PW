@@ -20,14 +20,21 @@ export default async function handler(req, res) {
   try {
     const { max_results = '100', next_cursor = '' } = req.query;
     
+    // 使用环境变量或硬编码凭据
+    const cloudName = process.env.CLOUDINARY_CLOUD_NAME || 'do0c7uhxc';
+    const apiKey = process.env.CLOUDINARY_API_KEY || '432716195215516';
+    const apiSecret = process.env.CLOUDINARY_API_SECRET || 'xyrwcwbTy6OZUrbE4lfw7hF4sG8';
+    
     // 构建Cloudinary API URL
-    let cloudinaryUrl = `https://api.cloudinary.com/v1_1/do0c7uhxc/resources/image?max_results=${max_results}&include_deleted=false&type=upload&context=true`;
+    let cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudName}/resources/image?max_results=${max_results}&include_deleted=false&type=upload&context=true`;
     if (next_cursor) {
       cloudinaryUrl += `&next_cursor=${next_cursor}`;
     }
     
     // 创建Basic Auth
-    const auth = Buffer.from('432716195215516:xyrwcwbTy6OZUrbE4lfw7hF4sG8').toString('base64');
+    const auth = Buffer.from(`${apiKey}:${apiSecret}`).toString('base64');
+    
+    console.log('Calling Cloudinary API:', cloudinaryUrl);
     
     // 调用Cloudinary API
     const response = await fetch(cloudinaryUrl, {
@@ -38,16 +45,22 @@ export default async function handler(req, res) {
     });
     
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Cloudinary API error:', response.status, errorText);
       throw new Error(`Cloudinary API error: ${response.status} ${response.statusText}`);
     }
     
     const data = await response.json();
+    console.log('Cloudinary API success:', data.resources?.length || 0, 'resources');
     
     // 返回数据
     res.status(200).json(data);
     
   } catch (error) {
     console.error('Cloudinary proxy error:', error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ 
+      error: error.message,
+      details: 'Check server logs for more information'
+    });
   }
 }
