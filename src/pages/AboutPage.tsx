@@ -92,80 +92,6 @@ export function AboutPage() {
           </div>
         </section>
 
-        {/* 技能和兴趣 */}
-        <section className="bg-gray-50 py-20">
-          <Container>
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.8 }}
-              className="text-center mb-16"
-            >
-              <h2 className="text-3xl font-serif mb-8 text-gray-900">
-                {t('about.skillsTitle')}
-              </h2>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                {t('about.skillsDescription')}
-              </p>
-            </motion.div>
-
-            <div className="grid md:grid-cols-3 gap-8">
-              {/* 技术技能 */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 1.0 }}
-                className="bg-white p-8 rounded-lg shadow-sm"
-              >
-                <h3 className="text-xl font-semibold mb-4 text-gray-900">
-                  {t('about.technicalSkills')}
-                </h3>
-                <ul className="space-y-2 text-gray-600">
-                  <li>• SWE @ Lululemon — led experimentation & testing platforms ($200M+ revenue impact)</li>
-                  <li>• Full-stack A/B testing frameworks</li>
-                  <li>• Human-Computer Interaction (HCI)</li>
-                  <li>• Product design & strategy</li>
-                </ul>
-              </motion.div>
-
-              {/* 创作兴趣 */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 1.2 }}
-                className="bg-white p-8 rounded-lg shadow-sm"
-              >
-                <h3 className="text-xl font-semibold mb-4 text-gray-900">
-                  {t('about.creativeInterests')}
-                </h3>
-                <ul className="space-y-2 text-gray-600">
-                  <li>• Photographer with growing side business in Seattle (graduation shoots, creative portraits)</li>
-                  <li>• Director & actor in multiple Chinese theatre productions</li>
-                  <li>• MC of a Seattle Chinese radio</li>
-                  <li>• Storytelling through photography & theatre</li>
-                </ul>
-              </motion.div>
-
-              {/* 工作理念 */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 1.4 }}
-                className="bg-white p-8 rounded-lg shadow-sm"
-              >
-                <h3 className="text-xl font-semibold mb-4 text-gray-900">
-                  {t('about.philosophy')}
-                </h3>
-                <ul className="space-y-2 text-gray-600">
-                  <li>• UMich CS '22, with minors in Math & Complex Systems</li>
-                  <li>• Based in Seattle</li>
-                  <li>• Combining engineering, design, and creativity</li>
-                  <li>• Building products people truly need</li>
-                </ul>
-              </motion.div>
-            </div>
-          </Container>
-        </section>
 
         {/* 人生时间线 */}
         <section className="py-20 bg-gradient-to-br from-gray-50 to-white">
@@ -173,7 +99,7 @@ export function AboutPage() {
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 1.6 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
               className="text-center mb-16"
             >
               <h2 className="text-4xl font-serif mb-6 text-gray-900">
@@ -188,7 +114,7 @@ export function AboutPage() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 1.8 }}
+              transition={{ duration: 0.8, delay: 1.0 }}
             >
               <Timeline events={timelineEvents} />
             </motion.div>
