@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode, useCallback, useMemo } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode, useCallback, useMemo, useRef } from 'react';
 import { translations } from '../translations';
 
 type Language = 'en' | 'zh';
@@ -33,9 +33,23 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     return storedLang;
   });
 
+  // 使用ref来跟踪是否已经初始化
+  const isInitialized = useRef(false);
+
+  // 初始化时从localStorage读取语言
+  useEffect(() => {
+    if (!isInitialized.current) {
+      const storedLang = getStoredLanguage();
+      if (storedLang !== language) {
+        setLanguageState(storedLang);
+      }
+      isInitialized.current = true;
+    }
+  }, []);
+
   // 当语言改变时，保存到localStorage和全局状态
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && isInitialized.current) {
       localStorage.setItem('preferred-language', language);
       globalLanguage = language;
       console.log('LanguageProvider: Language changed to', language, 'saved to localStorage');
