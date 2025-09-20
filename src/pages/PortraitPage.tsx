@@ -33,6 +33,31 @@ export function PortraitPage() {
     loadMore 
   } = useDynamicCloudinaryPortrait();
   
+  // 临时：强制使用静态数据来测试
+  const staticGroups = [
+    {
+      id: 'seattle-tulips',
+      titleKey: 'portrait.groups.seattleTulips',
+      mainPhoto: {
+        src: "https://raw.githubusercontent.com/lalavl/portfolio-images/main/portrait/seattle-tulips/tulip-portrait-1.jpg",
+        alt: "西雅图郁金香人像摄影作品"
+      },
+      photos: [
+        {
+          src: "https://raw.githubusercontent.com/lalavl/portfolio-images/main/portrait/seattle-tulips/tulip-portrait-1.jpg",
+          alt: "西雅图郁金香人像摄影作品"
+        }
+      ],
+      category: "人像摄影",
+      location: "西雅图",
+      date: "2024",
+      folderPath: "image-repo/portrait/seattle-tulips"
+    }
+  ];
+  
+  // 使用静态数据作为fallback
+  const displayGroups = portraitGroups.length > 0 ? portraitGroups : staticGroups;
+  
   // 使用动态相册发现（仅在Cloudinary失败时使用）
   const { albums, isLoading: albumsLoading, error: albumsError } = useAssetFolderAlbums();
 
@@ -315,9 +340,9 @@ export function PortraitPage() {
           )}
 
           {/* 相册网格 */}
-          {!groupsLoading && !groupsError && portraitGroups.length > 0 && (
+          {!groupsLoading && !groupsError && displayGroups.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {portraitGroups.map((group, index) => (
+              {displayGroups.map((group, index) => (
                 <PhotoGroupCard 
                   key={group.id} 
                   group={group} 
@@ -347,7 +372,7 @@ export function PortraitPage() {
           )}
 
           {/* 空状态 */}
-          {!groupsLoading && !albumsLoading && !groupsError && !albumsError && portraitGroups.length === 0 && albums.length === 0 && (
+          {!groupsLoading && !albumsLoading && !groupsError && !albumsError && displayGroups.length === 0 && albums.length === 0 && (
             <div className="text-center py-20">
               <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 max-w-md mx-auto">
                 <p className="text-gray-600 font-medium mb-2">没有找到相册</p>
