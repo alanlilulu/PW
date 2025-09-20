@@ -17,10 +17,14 @@ let globalLanguage: Language = 'en';
 // 从localStorage获取保存的语言设置，默认为英文
 const getStoredLanguage = (): Language => {
   if (typeof window !== 'undefined') {
-    const stored = localStorage.getItem('preferred-language');
+    // 优先使用localStorage，如果没有则使用sessionStorage
+    let stored = localStorage.getItem('preferred-language');
+    if (!stored) {
+      stored = sessionStorage.getItem('preferred-language');
+    }
     const lang = (stored === 'zh' || stored === 'en') ? stored : 'en';
     globalLanguage = lang;
-    console.log('LanguageContext: getStoredLanguage called, returning:', lang);
+    console.log('LanguageContext: getStoredLanguage called, returning:', lang, 'from:', stored ? 'storage' : 'default');
     return lang;
   }
   return globalLanguage;
@@ -51,8 +55,9 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (typeof window !== 'undefined' && isInitialized.current) {
       localStorage.setItem('preferred-language', language);
+      sessionStorage.setItem('preferred-language', language);
       globalLanguage = language;
-      console.log('LanguageProvider: Language changed to', language, 'saved to localStorage');
+      console.log('LanguageProvider: Language changed to', language, 'saved to localStorage and sessionStorage');
     }
   }, [language]);
 
