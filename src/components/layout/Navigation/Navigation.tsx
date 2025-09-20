@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { navigationItems } from './navigationItems';
 import { NavigationLink } from './NavigationLink';
 import { useLanguage } from '../../../contexts/LanguageContext';
@@ -40,31 +40,37 @@ export function Navigation() {
           if (item.href.startsWith('/')) {
             // 页面路由链接（如 /drama, /photo-management）
             return (
-              <motion.a
+              <motion.div
                 key={item.name}
-                href={item.href}
-                className="text-gray-600 hover:text-gray-900 transition-colors cursor-pointer"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
                 transition={{ duration: 0.2 }}
               >
-                {t(item.translationKey)}
-              </motion.a>
+                <Link
+                  to={item.href}
+                  className="text-gray-600 hover:text-gray-900 transition-colors cursor-pointer"
+                >
+                  {t(item.translationKey)}
+                </Link>
+              </motion.div>
             );
           } else if (item.href === '#hero' || item.href === '#portrait') {
             // About 和 Portrait 标签跳转到独立页面
             const path = item.href === '#hero' ? '/about' : '/portrait';
             return (
-              <motion.a
+              <motion.div
                 key={item.name}
-                href={path}
-                className="text-gray-600 hover:text-gray-900 transition-colors cursor-pointer"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
                 transition={{ duration: 0.2 }}
               >
-                {t(item.translationKey)}
-              </motion.a>
+                <Link
+                  to={path}
+                  className="text-gray-600 hover:text-gray-900 transition-colors cursor-pointer"
+                >
+                  {t(item.translationKey)}
+                </Link>
+              </motion.div>
             );
           } else {
             // 锚点链接（如 #career）
@@ -86,18 +92,21 @@ export function Navigation() {
           else if (item.href.startsWith('/')) path = item.href;
           
           return (
-            <motion.a
+            <motion.div
               key={item.name}
-              href={path}
-              className={`text-gray-600 hover:text-gray-900 transition-colors cursor-pointer ${
-                location.pathname === path ? 'text-gray-900 border-b-2 border-gray-900 pb-1' : ''
-              }`}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
               transition={{ duration: 0.2 }}
             >
-              {t(item.translationKey)}
-            </motion.a>
+              <Link
+                to={path}
+                className={`text-gray-600 hover:text-gray-900 transition-colors cursor-pointer ${
+                  location.pathname === path ? 'text-gray-900 border-b-2 border-gray-900 pb-1' : ''
+                }`}
+              >
+                {t(item.translationKey)}
+              </Link>
+            </motion.div>
           );
         }
       })}

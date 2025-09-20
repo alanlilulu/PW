@@ -1,6 +1,5 @@
-import { createContext, useContext, useState, useEffect, ReactNode, useCallback, useMemo, useRef } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode, useCallback, useMemo } from 'react';
 import { translations } from '../translations';
-import { useLocation } from 'react-router-dom';
 
 type Language = 'en' | 'zh';
 
@@ -18,64 +17,27 @@ let globalLanguage: Language = 'en';
 // 从localStorage获取保存的语言设置，默认为英文
 const getStoredLanguage = (): Language => {
   if (typeof window !== 'undefined') {
-    // 优先使用localStorage，如果没有则使用sessionStorage
-    let stored = localStorage.getItem('preferred-language');
-    if (!stored) {
-      stored = sessionStorage.getItem('preferred-language');
-    }
+    const stored = localStorage.getItem('preferred-language');
     const lang = (stored === 'zh' || stored === 'en') ? stored : 'en';
     globalLanguage = lang;
-    console.log('LanguageContext: getStoredLanguage called, returning:', lang, 'from:', stored ? 'storage' : 'default');
     return lang;
   }
   return globalLanguage;
 };
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<Language>(() => {
-    const storedLang = getStoredLanguage();
-    console.log('LanguageProvider: useState initializer called, language:', storedLang);
-    return storedLang;
-  });
-
-  // 使用ref来跟踪是否已经初始化
-  const isInitialized = useRef(false);
-  const location = useLocation();
-
-  // 初始化时从localStorage读取语言
-  useEffect(() => {
-    if (!isInitialized.current) {
-      const storedLang = getStoredLanguage();
-      if (storedLang !== language) {
-        setLanguageState(storedLang);
-      }
-      isInitialized.current = true;
-    }
-  }, []);
-
-  // 监听路由变化，确保语言状态不会因为路由变化而重置
-  useEffect(() => {
-    console.log('LanguageProvider: Route changed to', location.pathname, 'current language:', language);
-    // 如果语言状态被重置，从存储中恢复
-    if (language === 'en' && globalLanguage !== 'en') {
-      console.log('LanguageProvider: Language was reset, restoring from global state:', globalLanguage);
-      setLanguageState(globalLanguage);
-    }
-  }, [location.pathname, language]);
+  const [language, setLanguageState] = useState<Language>(getStoredLanguage);
 
   // 当语言改变时，保存到localStorage和全局状态
   useEffect(() => {
-    if (typeof window !== 'undefined' && isInitialized.current) {
+    if (typeof window !== 'undefined') {
       localStorage.setItem('preferred-language', language);
-      sessionStorage.setItem('preferred-language', language);
       globalLanguage = language;
-      console.log('LanguageProvider: Language changed to', language, 'saved to localStorage and sessionStorage');
     }
   }, [language]);
 
   // 使用useCallback确保setLanguage函数稳定
   const setLanguage = useCallback((lang: Language) => {
-    console.log('LanguageProvider: setLanguage called with', lang);
     setLanguageState(lang);
     globalLanguage = lang;
   }, []);

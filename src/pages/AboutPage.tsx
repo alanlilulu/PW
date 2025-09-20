@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { Header } from '../components/layout/Header';
 import { Container } from '../components/ui/Container';
@@ -6,17 +6,10 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useDebug } from '../contexts/DebugContext';
 import { Timeline } from '../components/sections/About/Timeline';
 import { timelineEvents } from '../data/timelineData';
-import { useLocation } from 'react-router-dom';
 
 export function AboutPage() {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   const { showDebugUI } = useDebug();
-  const location = useLocation();
-  
-  // 调试：记录组件渲染和语言状态
-  useEffect(() => {
-    console.log('AboutPage: Component mounted/updated, language:', language, 'location:', location.pathname);
-  }, [language, location.pathname]);
 
   return (
     <div className="min-h-screen bg-white">
