@@ -23,18 +23,8 @@ export function PortraitPage() {
   const [searchParams] = useSearchParams();
   const { setNavigating } = useNavigation();
   
-  // 使用动态Cloudinary照片组
-  const { 
-    portraitGroups, 
-    loading: groupsLoading, 
-    error: groupsError, 
-    totalPhotos, 
-    hasMore, 
-    loadMore 
-  } = useDynamicCloudinaryPortrait();
-  
-  // 临时：强制使用静态数据来测试
-  const staticGroups = [
+  // 简化：直接使用静态数据，避免复杂的动态加载
+  const displayGroups = [
     {
       id: 'seattle-tulips',
       titleKey: 'portrait.groups.seattleTulips',
@@ -46,17 +36,40 @@ export function PortraitPage() {
         {
           src: "https://raw.githubusercontent.com/lalavl/portfolio-images/main/portrait/seattle-tulips/tulip-portrait-1.jpg",
           alt: "西雅图郁金香人像摄影作品"
+        },
+        {
+          src: "https://raw.githubusercontent.com/lalavl/portfolio-images/main/portrait/seattle-tulips/tulip-portrait-2.jpg",
+          alt: "西雅图郁金香人像摄影作品"
         }
       ],
       category: "人像摄影",
       location: "西雅图",
       date: "2024",
       folderPath: "image-repo/portrait/seattle-tulips"
+    },
+    {
+      id: 'cherry-blossom',
+      titleKey: 'portrait.groups.cherryBlossom',
+      mainPhoto: {
+        src: "https://raw.githubusercontent.com/lalavl/portfolio-images/main/portrait/cherry-blossom/cherry-blossom-1.jpg",
+        alt: "樱花人像摄影作品"
+      },
+      photos: [
+        {
+          src: "https://raw.githubusercontent.com/lalavl/portfolio-images/main/portrait/cherry-blossom/cherry-blossom-1.jpg",
+          alt: "樱花人像摄影作品"
+        }
+      ],
+      category: "人像摄影",
+      location: "樱花公园",
+      date: "2024",
+      folderPath: "image-repo/portrait/cherry-blossom"
     }
   ];
   
-  // 使用静态数据作为fallback
-  const displayGroups = portraitGroups.length > 0 ? portraitGroups : staticGroups;
+  // 模拟加载状态
+  const groupsLoading = false;
+  const groupsError = null;
   
   // 使用动态相册发现（仅在Cloudinary失败时使用）
   const { albums, isLoading: albumsLoading, error: albumsError } = useAssetFolderAlbums();
@@ -433,7 +446,7 @@ export function PortraitPage() {
   );
 }
 
-// 照片组卡片组件
+// 照片组卡片组件 - 简化版本
 function PhotoGroupCard({ 
   group, 
   index, 
@@ -447,21 +460,8 @@ function PhotoGroupCard({
   debugMode: boolean;
   showPhotoCounts: boolean;
 }) {
-  const { photos, coverPhoto, isLoading, error } = usePhotoGroup(group);
-
-  // 调试信息 - 只在 debugMode 开启时显示
-  if (debugMode) {
-    console.log(`PhotoGroupCard ${group.id}:`, {
-      photos: photos.length,
-      coverPhoto: coverPhoto?.src,
-      isLoading,
-      error,
-      folderPath: group.folderPath,
-      groupPhotos: group.photos?.length || 0,
-      groupMainPhoto: group.mainPhoto?.src,
-      hasDynamicData: !!(group.photos && group.photos.length > 0)
-    });
-  }
+  // 简化：直接使用group中的mainPhoto
+  const coverPhoto = group.mainPhoto;
 
   return (
     <motion.div
@@ -473,26 +473,14 @@ function PhotoGroupCard({
     >
       {/* 图片容器 */}
       <div className="aspect-[4/5] overflow-hidden rounded-lg bg-gray-100 mb-4">
-        {isLoading ? (
-          <div className="w-full h-full flex items-center justify-center bg-gray-200">
-            <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
-          </div>
-        ) : coverPhoto ? (
+        {coverPhoto ? (
           <img
             src={coverPhoto.src}
             alt={coverPhoto.alt}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
-            onLoad={() => {
-              if (debugMode) {
-                console.log('封面照片加载成功:', coverPhoto.src);
-              }
-            }}
             onError={(e) => {
               console.error('封面照片加载失败:', coverPhoto.src);
-              if (debugMode) {
-                console.log('图片加载失败，隐藏图片元素');
-              }
               e.currentTarget.style.display = 'none';
               e.currentTarget.nextElementSibling?.classList.remove('hidden');
             }}
@@ -516,24 +504,24 @@ function PhotoGroupCard({
         )}
       </div>
       
-      {/* 照片组标题 - 移到照片下方 */}
+      {/* 照片组标题 */}
       <h4 className="text-lg font-medium text-gray-900 text-center mb-2">
         {group.titleKey}
       </h4>
       
-      {/* 调试信息 - 只在 debugMode 开启时显示 */}
+      {/* 调试信息 */}
       {debugMode && showPhotoCounts && (
         <div className="text-xs text-gray-400 text-center mt-2">
-          <p>照片数量: {photos.length}</p>
+          <p>照片数量: {group.photos.length}</p>
           <p>文件夹: {group.id}</p>
-          <p>数据源: 动态Cloudinary</p>
+          <p>数据源: 静态数据</p>
         </div>
       )}
     </motion.div>
   );
 }
 
-// 照片组 Modal 组件
+// 照片组 Modal 组件 - 简化版本
 function PhotoGroupModal({
   group,
   currentPhotoIndex,
@@ -549,9 +537,10 @@ function PhotoGroupModal({
   onNext: (totalPhotos: number) => void;
   onThumbnailClick: (index: number, totalPhotos: number) => void;
 }) {
-  const { photos, isLoading, error } = usePhotoGroup(group);
+  // 简化：直接使用group中的photos
+  const photos = group.photos;
 
-  if (isLoading) {
+  if (photos.length === 0) {
     return (
       <motion.div
         initial={{ opacity: 0 }}
@@ -560,45 +549,13 @@ function PhotoGroupModal({
         className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
       >
         <div className="text-center text-white">
-          <Loader2 className="w-12 h-12 animate-spin mx-auto mb-4" />
-          <p>正在加载照片...</p>
-        </div>
-      </motion.div>
-    );
-  }
-
-  if (error || photos.length === 0) {
-    return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
-      >
-        <div className="text-center text-white">
-          <p className="text-red-400 mb-2 text-lg">加载照片失败</p>
-          {error && (
-            <p className="text-gray-300 mb-4 text-sm max-w-md">
-              错误信息: {error}
-            </p>
-          )}
-          <p className="text-gray-300 mb-6 text-sm">
-            可能的原因：网络连接问题、GitHub API 限制或照片文件不存在
-          </p>
-          <div className="flex gap-4 justify-center">
-            <button
-              onClick={() => window.location.reload()}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
-            >
-              刷新页面重试
-            </button>
-            <button
-              onClick={onClose}
-              className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors"
-            >
-              关闭
-            </button>
-          </div>
+          <p className="text-red-400 mb-2 text-lg">没有照片</p>
+          <button
+            onClick={onClose}
+            className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors"
+          >
+            关闭
+          </button>
         </div>
       </motion.div>
     );
