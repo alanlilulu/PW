@@ -20,24 +20,31 @@ const getStoredLanguage = (): Language => {
     const stored = localStorage.getItem('preferred-language');
     const lang = (stored === 'zh' || stored === 'en') ? stored : 'en';
     globalLanguage = lang;
+    console.log('LanguageContext: getStoredLanguage called, returning:', lang);
     return lang;
   }
   return globalLanguage;
 };
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<Language>(getStoredLanguage);
+  const [language, setLanguageState] = useState<Language>(() => {
+    const storedLang = getStoredLanguage();
+    console.log('LanguageProvider: useState initializer called, language:', storedLang);
+    return storedLang;
+  });
 
   // 当语言改变时，保存到localStorage和全局状态
   useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('preferred-language', language);
       globalLanguage = language;
+      console.log('LanguageProvider: Language changed to', language, 'saved to localStorage');
     }
   }, [language]);
 
   // 使用useCallback确保setLanguage函数稳定
   const setLanguage = useCallback((lang: Language) => {
+    console.log('LanguageProvider: setLanguage called with', lang);
     setLanguageState(lang);
     globalLanguage = lang;
   }, []);

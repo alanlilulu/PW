@@ -5,12 +5,19 @@ import { useDynamicCloudinaryPortrait } from '../hooks/useDynamicCloudinaryPortr
 import { Header } from '../components/layout/Header';
 import { X, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useLocation } from 'react-router-dom';
 
 export function PortraitPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentGroup, setCurrentGroup] = useState<PortraitGroup | null>(null);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const location = useLocation();
+  
+  // 调试：记录组件渲染和语言状态
+  useEffect(() => {
+    console.log('PortraitPage: Component mounted/updated, language:', language, 'location:', location.pathname);
+  }, [language, location.pathname]);
   
   // 使用动态Cloudinary照片组
   const { 
