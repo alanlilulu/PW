@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode, useCallback, useMemo } from 'react';
 import { translations } from '../translations';
 
 type Language = 'en' | 'zh';
@@ -11,42 +11,38 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
+// 全局语言状态，避免组件重新挂载时重置
+let globalLanguage: Language = 'en';
+
 // 从localStorage获取保存的语言设置，默认为英文
 const getStoredLanguage = (): Language => {
   if (typeof window !== 'undefined') {
     const stored = localStorage.getItem('preferred-language');
-    console.log('LanguageProvider: Retrieved from localStorage:', stored);
-    return (stored === 'zh' || stored === 'en') ? stored : 'en';
+    const lang = (stored === 'zh' || stored === 'en') ? stored : 'en';
+    globalLanguage = lang;
+    return lang;
   }
-  return 'en';
+  return globalLanguage;
 };
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = useState<Language>(() => {
-    const storedLang = getStoredLanguage();
-    console.log('LanguageProvider: Initializing with language:', storedLang);
-    return storedLang;
-  });
+  const [language, setLanguageState] = useState<Language>(getStoredLanguage);
 
-  // 调试日志
-  useEffect(() => {
-    console.log('LanguageProvider: Language changed to', language);
-  }, [language]);
-
-  // 当语言改变时，保存到localStorage
+  // 当语言改变时，保存到localStorage和全局状态
   useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('preferred-language', language);
-      console.log('LanguageProvider: Saved language to localStorage:', language);
+      globalLanguage = language;
     }
   }, [language]);
 
-  // 包装setLanguage函数，确保状态更新和持久化
-  const handleSetLanguage = (lang: Language) => {
-    setLanguage(lang);
-  };
+  // 使用useCallback确保setLanguage函数稳定
+  const setLanguage = useCallback((lang: Language) => {
+    setLanguageState(lang);
+    globalLanguage = lang;
+  }, []);
 
-  const t = (key: string): string => {
+  const t = useCallback((key: string): string => {
     const keys = key.split('.');
     let value: any = translations[language];
     
@@ -55,10 +51,16 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     }
     
     return value || key;
-  };
+  }, [language]);
+
+  const contextValue = useMemo(() => ({
+    language,
+    setLanguage,
+    t
+  }), [language, setLanguage, t]);
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage: handleSetLanguage, t }}>
+    <LanguageContext.Provider value={contextValue}>
       {children}
     </LanguageContext.Provider>
   );
