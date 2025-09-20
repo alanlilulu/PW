@@ -40,7 +40,7 @@ export function DramaWork({
 
   return (
     <motion.div 
-      className={`bg-transparent overflow-hidden cursor-pointer relative ${isLarge ? 'p-8' : 'p-6'}`}
+      className={`bg-transparent overflow-hidden cursor-pointer relative ${isLarge ? 'p-6 md:p-8' : 'p-4 md:p-6'}`}
       onClick={handleClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -70,9 +70,9 @@ export function DramaWork({
         </motion.div>
       )}
 
-      {/* Image Section */}
+      {/* Image Section - 移动端优化 */}
       <div 
-        className="relative mb-6" 
+        className="relative mb-4 md:mb-6" 
         style={{ 
           boxShadow: 'none !important',
           WebkitBoxShadow: 'none',
@@ -82,7 +82,7 @@ export function DramaWork({
       >
         {imageUrl ? (
           <div 
-            className={`aspect-[4/3] overflow-hidden ${isLarge ? 'mb-6' : 'mb-4'}`}
+            className={`aspect-[4/3] overflow-hidden ${isLarge ? 'mb-4 md:mb-6' : 'mb-3 md:mb-4'}`}
             style={{ 
               clipPath: 'inset(0 round 8px)',
               WebkitClipPath: 'inset(0 round 8px)'
@@ -106,9 +106,9 @@ export function DramaWork({
           />
         )}
         
-        {/* Overlay with play info */}
+        {/* Overlay with play info - 移动端优化 */}
         <motion.div 
-          className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/40 to-transparent p-4"
+          className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/40 to-transparent p-3 md:p-4"
           animate={{
             background: isHovered 
               ? "linear-gradient(to top, rgba(0,0,0,0.6), transparent)"
@@ -123,26 +123,26 @@ export function DramaWork({
             }}
             transition={{ duration: 0.3 }}
           >
-            <h3 className={`font-normal ${isLarge ? 'text-xl' : 'text-lg'} mb-1`}>
+            <h3 className={`font-normal ${isLarge ? 'text-lg md:text-xl' : 'text-base md:text-lg'} mb-1`}>
               {title}
             </h3>
-            <p className={`${isLarge ? 'text-base' : 'text-sm'} opacity-70`}>
+            <p className={`${isLarge ? 'text-sm md:text-base' : 'text-xs md:text-sm'} opacity-70`}>
               {role}
             </p>
           </motion.div>
         </motion.div>
       </div>
       
-      {/* Content Section */}
+      {/* Content Section - 移动端优化 */}
       <motion.div 
-        className="text-center mt-4"
+        className="text-center mt-3 md:mt-4"
         animate={{
           y: isHovered ? -2 : 0
         }}
         transition={{ duration: 0.3 }}
       >
         <motion.h3 
-          className={`font-light text-gray-800 mb-2 ${isLarge ? 'text-2xl' : 'text-xl'}`}
+          className={`font-light text-gray-800 mb-2 ${isLarge ? 'text-xl md:text-2xl' : 'text-lg md:text-xl'}`}
           animate={{
             color: isHovered ? "#1f2937" : "#374151"
           }}
@@ -151,7 +151,7 @@ export function DramaWork({
           {title}
         </motion.h3>
         <motion.p 
-          className="text-gray-600 mb-2 font-light"
+          className="text-gray-600 mb-2 font-light text-sm md:text-base"
           animate={{
             color: isHovered ? "#4b5563" : "#6b7280"
           }}
@@ -161,7 +161,7 @@ export function DramaWork({
         </motion.p>
         {description && (
           <motion.p 
-            className="text-sm text-gray-500 mt-2 font-light"
+            className="text-xs md:text-sm text-gray-500 mt-2 font-light"
             animate={{
               color: isHovered ? "#6b7280" : "#9ca3af"
             }}

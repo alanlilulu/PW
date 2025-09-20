@@ -250,22 +250,22 @@ export function DramaPage() {
       />
       
       <motion.div 
-        className="min-h-screen bg-gray-50 pt-20"
+        className="min-h-screen bg-gray-50 pt-16 md:pt-20"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
-        {/* Hero Section */}
+        {/* Hero Section - 移动端优化 */}
         <motion.section 
-          className="py-20 bg-white"
+          className="py-12 md:py-20 bg-white"
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.6 }}
         >
           <Container>
-            <div className="text-center">
+            <div className="text-center px-4">
               <motion.h1 
-                className="text-5xl md:text-6xl font-serif text-gray-900 mb-6"
+                className="text-3xl md:text-5xl lg:text-6xl font-serif text-gray-900 mb-4 md:mb-6"
                 initial={{ y: 30, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.3, duration: 0.6 }}
@@ -273,7 +273,7 @@ export function DramaPage() {
                 {t('drama.pageTitle') || '🎭 Alan (阿龙) Drama Portfolio'}
               </motion.h1>
               <motion.p 
-                className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed"
+                className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed"
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.4, duration: 0.6 }}
@@ -284,39 +284,39 @@ export function DramaPage() {
           </Container>
         </motion.section>
 
-        {/* Drama Journey Section */}
+        {/* Drama Journey Section - 移动端优化 */}
         <motion.section 
-          className="py-20 bg-gray-50"
+          className="py-12 md:py-20 bg-gray-50"
           initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.6 }}
         >
           <Container>
             <motion.div
-              className="text-center mb-16"
+              className="text-center mb-12 md:mb-16 px-4"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.6 }}
             >
-              <h2 className="text-4xl font-serif mb-8 text-gray-900">
+              <h2 className="text-2xl md:text-4xl font-serif mb-6 md:mb-8 text-gray-900">
                   {t('drama.journey.title') || 'My Drama Journey'}
                 </h2>
               <motion.div 
-                className="max-w-4xl mx-auto space-y-6 text-gray-600 leading-relaxed"
+                className="max-w-4xl mx-auto space-y-4 md:space-y-6 text-gray-600 leading-relaxed"
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.5, duration: 0.6 }}
               >
-                <p className="text-xl">
+                <p className="text-lg md:text-xl">
                   {t('drama.journey.intro') || 'I am both an actor and director, and the stage is where I explore humanity and storytelling. Over the years, I have portrayed dozens of characters through different genres of plays and directed two major theatrical productions.'}
                 </p>
-                  <p className="text-lg">
+                  <p className="text-base md:text-lg">
                   {t('drama.journey.description1') || 'Alan is an active Chinese theater actor and director in Seattle and campus theater circles, with over 7 years of stage experience.'}
                   </p>
-                  <p className="text-lg">
+                  <p className="text-base md:text-lg">
                   {t('drama.journey.description2') || 'He excels at portraying distinctive, multi-layered characters and explores relationships and inner worlds through performance.'}
                   </p>
-                  <p className="text-lg">
+                  <p className="text-base md:text-lg">
                   {t('drama.journey.description3') || 'His theatrical journey spans from absurdist plays and comedies to suspense dramas, while also serving as a director for mystery and spy thrillers.'}
                   </p>
                 </motion.div>
@@ -324,30 +324,30 @@ export function DramaPage() {
           </Container>
         </motion.section>
 
-        {/* Recent Performances */}
+        {/* Recent Performances - 移动端优化 */}
         <motion.section 
-          className="py-20 bg-white"
+          className="py-12 md:py-20 bg-white"
           initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.5, duration: 0.6 }}
         >
           <Container>
             <motion.div
-              className="text-center mb-16"
+              className="text-center mb-12 md:mb-16 px-4"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.6, duration: 0.6 }}
             >
-              <h2 className="text-4xl font-serif mb-6 text-gray-900">
+              <h2 className="text-2xl md:text-4xl font-serif mb-4 md:mb-6 text-gray-900">
                 Recent Works (2024-2025)
               </h2>
-              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
                 Key roles and productions in my theatrical career
               </p>
             </motion.div>
 
                 <motion.div
-              className="grid md:grid-cols-3 gap-8"
+              className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 px-4"
               initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.7, duration: 0.6 }}
@@ -385,27 +385,27 @@ export function DramaPage() {
           </Container>
         </motion.section>
 
-        {/* Classic Performances */}
+        {/* Classic Performances - 移动端优化 */}
         <motion.section 
-          className="py-20 bg-gray-50"
+          className="py-12 md:py-20 bg-gray-50"
           initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.8, duration: 0.6 }}
         >
           <Container>
             <motion.div 
-              className="text-center mb-16"
+              className="text-center mb-12 md:mb-16 px-4"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.9, duration: 0.6 }}
             >
-              <h2 className="text-4xl font-serif mb-6 text-gray-900">
+              <h2 className="text-2xl md:text-4xl font-serif mb-4 md:mb-6 text-gray-900">
                 Classic Productions (2018-2022)
               </h2>
             </motion.div>
 
             <motion.div 
-              className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4"
               initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 1.0, duration: 0.6 }}
