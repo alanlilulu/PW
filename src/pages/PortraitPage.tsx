@@ -23,18 +23,71 @@ export function PortraitPage() {
   const [searchParams] = useSearchParams();
   const { setNavigating } = useNavigation();
   
-  // 使用动态Cloudinary照片组
-  const { 
-    portraitGroups, 
-    loading: groupsLoading, 
-    error: groupsError, 
-    totalPhotos, 
-    hasMore, 
-    loadMore 
-  } = useDynamicCloudinaryPortrait();
+  // 临时：使用静态数据，避免API问题
+  const displayGroups = [
+    {
+      id: 'seattle-tulips',
+      titleKey: 'portrait.groups.seattleTulips',
+      mainPhoto: {
+        src: "https://raw.githubusercontent.com/lalavl/portfolio-images/main/portrait/seattle-tulips/tulip-portrait-1.jpg",
+        alt: "西雅图郁金香人像摄影作品"
+      },
+      photos: [
+        {
+          src: "https://raw.githubusercontent.com/lalavl/portfolio-images/main/portrait/seattle-tulips/tulip-portrait-1.jpg",
+          alt: "西雅图郁金香人像摄影作品"
+        },
+        {
+          src: "https://raw.githubusercontent.com/lalavl/portfolio-images/main/portrait/seattle-tulips/tulip-portrait-2.jpg",
+          alt: "西雅图郁金香人像摄影作品"
+        }
+      ],
+      category: "人像摄影",
+      location: "西雅图",
+      date: "2024",
+      folderPath: "image-repo/portrait/seattle-tulips"
+    },
+    {
+      id: 'cherry-blossom',
+      titleKey: 'portrait.groups.cherryBlossom',
+      mainPhoto: {
+        src: "https://raw.githubusercontent.com/lalavl/portfolio-images/main/portrait/cherry-blossom/cherry-blossom-1.jpg",
+        alt: "樱花人像摄影作品"
+      },
+      photos: [
+        {
+          src: "https://raw.githubusercontent.com/lalavl/portfolio-images/main/portrait/cherry-blossom/cherry-blossom-1.jpg",
+          alt: "樱花人像摄影作品"
+        }
+      ],
+      category: "人像摄影",
+      location: "樱花公园",
+      date: "2024",
+      folderPath: "image-repo/portrait/cherry-blossom"
+    },
+    {
+      id: 'california-ditto',
+      titleKey: 'portrait.groups.californiaDitto',
+      mainPhoto: {
+        src: "https://raw.githubusercontent.com/lalavl/portfolio-images/main/portrait/california-ditto/california-portrait-1.jpg",
+        alt: "加州Ditto人像摄影作品"
+      },
+      photos: [
+        {
+          src: "https://raw.githubusercontent.com/lalavl/portfolio-images/main/portrait/california-ditto/california-portrait-1.jpg",
+          alt: "加州Ditto人像摄影作品"
+        }
+      ],
+      category: "人像摄影",
+      location: "加州",
+      date: "2024",
+      folderPath: "image-repo/portrait/california-ditto"
+    }
+  ];
   
-  // 使用动态数据
-  const displayGroups = portraitGroups;
+  // 模拟加载状态
+  const groupsLoading = false;
+  const groupsError = null;
   
   // 使用动态相册发现（仅在Cloudinary失败时使用）
   const { albums, isLoading: albumsLoading, error: albumsError } = useAssetFolderAlbums();
