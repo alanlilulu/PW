@@ -5,12 +5,14 @@ import { useDynamicCloudinaryPortrait } from '../hooks/useDynamicCloudinaryPortr
 import { Header } from '../components/layout/Header';
 import { X, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useSearchParams } from 'react-router-dom';
 
 export function PortraitPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentGroup, setCurrentGroup] = useState<PortraitGroup | null>(null);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const { t } = useLanguage();
+  const [searchParams] = useSearchParams();
   
   // 使用动态Cloudinary照片组
   const { 
@@ -21,6 +23,23 @@ export function PortraitPage() {
     hasMore, 
     loadMore 
   } = useDynamicCloudinaryPortrait();
+
+  // 处理URL参数，自动打开对应的相册
+  useEffect(() => {
+    const albumId = searchParams.get('album');
+    if (albumId && portraitGroups.length > 0) {
+      const targetGroup = portraitGroups.find(group => group.id === albumId);
+      if (targetGroup) {
+        setCurrentGroup(targetGroup);
+        setCurrentPhotoIndex(0);
+        setIsModalOpen(true);
+        // 清除URL参数，避免刷新页面时重复打开
+        const newUrl = new URL(window.location.href);
+        newUrl.searchParams.delete('album');
+        window.history.replaceState({}, '', newUrl.toString());
+      }
+    }
+  }, [searchParams, portraitGroups]);
 
   // 临时调试：显示加载状态和错误信息
   console.log('PortraitPage状态:', {
