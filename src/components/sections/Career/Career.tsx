@@ -8,9 +8,11 @@ import { SectionWrapper } from '../../ui/SectionWrapper';
 import { SectionContent } from '../../ui/SectionContent';
 import { DecorativeElement } from '../../ui/DecorativeElement';
 import { HoverCard } from '../../ui/HoverCard';
+import { useNavigate } from 'react-router-dom';
 
 export function Career() {
   const { t } = useLanguage();
+  const navigate = useNavigate();
 
   return (
     <SectionWrapper id="career" background="gray">
@@ -79,8 +81,10 @@ export function Career() {
               <button
                 className="group relative inline-flex items-center justify-center px-8 py-4 text-white font-medium transition-all duration-300"
                 onClick={() => {
-                  // 暂时滚动到页面顶部，将来可以跳转到Career页面
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                  navigate('/career');
+                  setTimeout(() => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }, 100);
                 }}
               >
                 {/* 背景渐变 */}

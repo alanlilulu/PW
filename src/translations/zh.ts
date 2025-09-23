@@ -193,7 +193,7 @@ export const zh = {
       description: '有兴趣合作或了解更多关于我的职业发展历程吗？',
       button: '返回首页'
     },
-    exploreButton: '查看完整履历'
+    exploreButton: '查看职业经历'
   },
 
   footer: {

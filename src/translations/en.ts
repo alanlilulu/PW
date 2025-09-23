@@ -193,7 +193,7 @@ export const en = {
       description: 'Interested in collaborating or learning more about my professional journey?',
       button: 'Back to Home'
     },
-    exploreButton: 'View Full Resume'
+    exploreButton: 'Explore Career'
   },
 
   footer: {
