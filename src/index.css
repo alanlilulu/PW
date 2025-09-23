@@ -1,5 +1,6 @@
 @import './styles/card-flip.css';
 @import './styles/scrollbar-hide.css';
+@import './styles/design-system.css';
 
 @tailwind base;
 @tailwind components;
