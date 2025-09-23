@@ -1,7 +1,7 @@
 import { Container } from '../ui/Container';
 import { Navigation } from './Navigation/Navigation';
 import { Instagram, Mail, Home, Globe, Menu, X } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useState } from 'react';
@@ -9,9 +9,19 @@ import { useState } from 'react';
 export function Header() {
   const { language, setLanguage } = useLanguage();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  // 处理移动端导航点击
+  const handleMobileNavigation = (path: string) => {
+    setIsMobileMenuOpen(false);
+    navigate(path);
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 100);
   };
 
   return (
@@ -115,34 +125,30 @@ export function Header() {
           <Container>
             <div className="py-4 space-y-2">
               {/* 导航链接 */}
-              <Link
-                to="/about"
-                className="block px-4 py-3 text-lg font-medium text-gray-900 hover:text-gray-600 hover:bg-gray-50 rounded-lg transition-all duration-200"
-                onClick={() => setIsMobileMenuOpen(false)}
+              <button
+                onClick={() => handleMobileNavigation('/about')}
+                className="block w-full text-left px-4 py-3 text-lg font-medium text-gray-900 hover:text-gray-600 hover:bg-gray-50 rounded-lg transition-all duration-200"
               >
                 About
-              </Link>
-              <Link
-                to="/portrait"
-                className="block px-4 py-3 text-lg font-medium text-gray-900 hover:text-gray-600 hover:bg-gray-50 rounded-lg transition-all duration-200"
-                onClick={() => setIsMobileMenuOpen(false)}
+              </button>
+              <button
+                onClick={() => handleMobileNavigation('/portrait')}
+                className="block w-full text-left px-4 py-3 text-lg font-medium text-gray-900 hover:text-gray-600 hover:bg-gray-50 rounded-lg transition-all duration-200"
               >
                 Portrait
-              </Link>
-              <Link
-                to="/drama"
-                className="block px-4 py-3 text-lg font-medium text-gray-900 hover:text-gray-600 hover:bg-gray-50 rounded-lg transition-all duration-200"
-                onClick={() => setIsMobileMenuOpen(false)}
+              </button>
+              <button
+                onClick={() => handleMobileNavigation('/drama')}
+                className="block w-full text-left px-4 py-3 text-lg font-medium text-gray-900 hover:text-gray-600 hover:bg-gray-50 rounded-lg transition-all duration-200"
               >
                 Drama
-              </Link>
-              <Link
-                to="/career"
-                className="block px-4 py-3 text-lg font-medium text-gray-900 hover:text-gray-600 hover:bg-gray-50 rounded-lg transition-all duration-200"
-                onClick={() => setIsMobileMenuOpen(false)}
+              </button>
+              <button
+                onClick={() => handleMobileNavigation('/career')}
+                className="block w-full text-left px-4 py-3 text-lg font-medium text-gray-900 hover:text-gray-600 hover:bg-gray-50 rounded-lg transition-all duration-200"
               >
                 Career
-              </Link>
+              </button>
               
               {/* 社交媒体链接 */}
               <div className="pt-4 border-t border-gray-200">

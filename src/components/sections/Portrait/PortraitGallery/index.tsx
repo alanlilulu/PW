@@ -44,10 +44,15 @@ export function PortraitGallery({ groups }: PortraitGalleryProps) {
   const handleAlbumClick = (album: PortraitGroup) => {
     setNavigating(true);
     
-    // 延迟导航，让用户看到点击效果
+    // 先跳转到portrait页面，然后滚动到顶部
+    navigate('/portrait');
     setTimeout(() => {
-      navigate(`/portrait?album=${album.id}`);
-    }, 300);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // 延迟打开相册，确保页面已加载
+      setTimeout(() => {
+        navigate(`/portrait?album=${album.id}`);
+      }, 500);
+    }, 100);
   };
 
   const handlePreviousRow = () => {

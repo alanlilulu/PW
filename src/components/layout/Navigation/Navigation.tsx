@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
 import { navigationItems } from './navigationItems';
 import { NavigationLink } from './NavigationLink';
 import { useLanguage } from '../../../contexts/LanguageContext';
@@ -9,7 +9,17 @@ export function Navigation() {
   const [activeSection, setActiveSection] = useState('');
   const { t } = useLanguage();
   const location = useLocation();
+  const navigate = useNavigate();
   const isHomePage = location.pathname === '/';
+
+  // 处理页面跳转并滚动到顶部
+  const handlePageNavigation = (path: string) => {
+    navigate(path);
+    // 延迟滚动确保页面已加载
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 100);
+  };
 
   useEffect(() => {
     if (!isHomePage) return; // 只在主页监听滚动
@@ -46,12 +56,12 @@ export function Navigation() {
                 whileTap={{ scale: 0.95 }}
                 transition={{ duration: 0.2 }}
               >
-                <Link
-                  to={item.href}
+                <button
+                  onClick={() => handlePageNavigation(item.href)}
                   className="text-gray-600 hover:text-gray-900 transition-colors cursor-pointer"
                 >
                   {t(item.translationKey)}
-                </Link>
+                </button>
               </motion.div>
             );
           } else if (item.href === '#hero' || item.href === '#portrait') {
@@ -64,12 +74,12 @@ export function Navigation() {
                 whileTap={{ scale: 0.95 }}
                 transition={{ duration: 0.2 }}
               >
-                <Link
-                  to={path}
+                <button
+                  onClick={() => handlePageNavigation(path)}
                   className="text-gray-600 hover:text-gray-900 transition-colors cursor-pointer"
                 >
                   {t(item.translationKey)}
-                </Link>
+                </button>
               </motion.div>
             );
           } else {
@@ -98,14 +108,14 @@ export function Navigation() {
               whileTap={{ scale: 0.95 }}
               transition={{ duration: 0.2 }}
             >
-              <Link
-                to={path}
+              <button
+                onClick={() => handlePageNavigation(path)}
                 className={`text-gray-600 hover:text-gray-900 transition-colors cursor-pointer ${
                   location.pathname === path ? 'text-gray-900 border-b-2 border-gray-900 pb-1' : ''
                 }`}
               >
                 {t(item.translationKey)}
-              </Link>
+              </button>
             </motion.div>
           );
         }
