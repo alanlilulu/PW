@@ -207,7 +207,7 @@ export const timelineEvents: TimelineEvent[] = [
       zh: '现在'
     },
     description: {
-      en: 'Continuing to live in Seattle while developing multiple identities as a software engineer, photographer, and theatre director, perfectly combining technology with creativity.',
+      en: 'Continuing to live in Seattle while developing multiple identities as a software engineer, photographer, and actor & director, perfectly combining technology with creativity.',
       zh: '继续在西雅图生活，同时发展软件工程、摄影和戏剧导演的多重身份，将技术与创意完美结合。'
     },
     location: {

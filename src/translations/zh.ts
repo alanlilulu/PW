@@ -10,18 +10,18 @@ export const zh = {
   hero: {
     greeting: '你好。',
     intro: '我是李安龙',
-    title: '软件工程师、摄影师与戏剧导演',
+    title: '软件工程师、摄影师与演员兼导演',
     description: '我创造数字体验并捕捉人类故事——通过代码、设计和镜头。',
     aboutButton: '了解更多关于我'
   },
 
   about: {
     pageTitle: '关于我',
-    pageDescription: '软件工程师、摄影师和戏剧导演，现居西雅图',
+    pageDescription: '软件工程师、摄影师和演员兼导演，现居西雅图',
     personalTitle: '你好，我是李安龙 👋',
     personalDescription1: '我是Lululemon的软件工程师，构建影响数百万客户的A/B测试框架。',
     personalDescription2: '我热衷于人机交互和产品设计，探索深思熟虑的设计如何塑造数字体验。',
-    personalDescription3: '在技术之外，我是摄影师📷和戏剧导演/演员🎭，通过镜头和舞台捕捉故事。',
+    personalDescription3: '在技术之外，我是摄影师📷和演员兼导演🎭，通过镜头和舞台捕捉故事。',
     approachTitle: '我的愿景 🌏',
     approachDescription1: '结合工程、设计和创造力，构建人们真正需要的产品。',
     approachDescription2: '通过代码、设计和镜头创造数字体验并捕捉人类故事。',

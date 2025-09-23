@@ -10,18 +10,18 @@ export const en = {
   hero: {
     greeting: 'Hi.',
     intro: "I'm Alan Li (李安龙)",
-    title: 'Software Engineer, Photographer & Theatre Director',
+    title: 'Software Engineer, Photographer & Actor & Director',
     description: "I create digital experiences and capture human stories — through code, design, and lens.",
     aboutButton: 'Learn More About Me'
   },
 
   about: {
     pageTitle: 'About Me',
-    pageDescription: 'Software Engineer, Photographer, and Theatre Director based in Seattle',
+    pageDescription: 'Software Engineer, Photographer, and Actor & Director based in Seattle',
     personalTitle: 'Hi, I\'m Alan Li (李安龙) 👋',
     personalDescription1: 'I\'m a Software Engineer at Lululemon, building A/B testing frameworks that impact millions of customers.',
     personalDescription2: 'I\'m passionate about Human-Computer Interaction and product design, exploring how thoughtful design shapes digital experiences.',
-    personalDescription3: 'Beyond tech, I\'m a photographer 📷 and theatre director/actor 🎭, capturing stories through lens and stage.',
+    personalDescription3: 'Beyond tech, I\'m a photographer 📷 and actor & director 🎭, capturing stories through lens and stage.',
     approachTitle: 'My Vision 🌏',
     approachDescription1: 'Combining engineering, design, and creativity to build products people truly need.',
     approachDescription2: 'Creating digital experiences and capturing human stories through code, design, and lens.',
