@@ -12,7 +12,7 @@ export function HeroBackground() {
       <img
         src="https://res.cloudinary.com/do0c7uhxc/image/upload/v1758270867/ChatGPT_Image_Sep_19_2025_01_34_06_AM_pvrbmo.png"
         alt="摄影师阿龙的个人作品"
-        className="w-full h-full object-cover object-left md:object-center"
+        className="w-full h-full object-cover object-right md:object-center"
         onError={(e) => {
           // 如果图片加载失败，显示纯色背景
           e.currentTarget.style.display = 'none';
