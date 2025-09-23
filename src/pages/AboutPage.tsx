@@ -58,8 +58,8 @@ export function AboutPage() {
 
         {/* About 内容 */}
         <section className="max-w-7xl mx-auto px-6 mb-20">
-          <div className="grid md:grid-cols-2 gap-16">
-            {/* 左侧：个人介绍 */}
+          <div className="max-w-4xl mx-auto">
+            {/* 个人介绍 */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -74,21 +74,6 @@ export function AboutPage() {
                 <p>{t('about.personalDescription3')}</p>
               </div>
             </motion.div>
-
-            {/* 右侧：工作方法 */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-            >
-              <h2 className="text-3xl font-serif mb-8 text-gray-900">
-                {t('about.approachTitle')}
-              </h2>
-              <div className="space-y-6 text-gray-700 leading-relaxed">
-                <p>{t('about.approachDescription1')}</p>
-                <p>{t('about.approachDescription2')}</p>
-              </div>
-            </motion.div>
           </div>
         </section>
 
@@ -99,7 +84,7 @@ export function AboutPage() {
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.8 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
               className="text-center mb-16"
             >
               <h2 className="text-4xl font-serif mb-6 text-gray-900">
@@ -114,7 +99,7 @@ export function AboutPage() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 1.0 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
             >
               <Timeline events={timelineEvents} />
             </motion.div>
